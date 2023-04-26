@@ -1,8 +1,21 @@
+package model;
+
+import java.util.ArrayList;
+
 public class Store {
+	ArrayList<Product> products;
 
 	public Store() {
-		// TODO - implement Store.Store
-		throw new UnsupportedOperationException();
+		products = new ArrayList<Product>();
+	}
+
+	/**
+	 * 
+	 * @param product
+	 */
+	public String addProduct(Product product) {
+		products.add(product);
+		return "Product added!";
 	}
 
 	/**
@@ -74,15 +87,6 @@ public class Store {
 	 */
 	public ArrayList<Product> sort(int sense, int variable) {
 		// TODO - implement Store.sort
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param product
-	 */
-	public String addProduct(Product product) {
-		// TODO - implement Store.addProduct
 		throw new UnsupportedOperationException();
 	}
 

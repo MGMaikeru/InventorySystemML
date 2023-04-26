@@ -1,8 +1,13 @@
+package model;
+
+import java.util.ArrayList;
+
 public class Controller {
 
+	private Store mercadoLibre;
+
 	public Controller() {
-		// TODO - implement Controller.Controller
-		throw new UnsupportedOperationException();
+		mercadoLibre = new Store();
 	}
 
 	/**
@@ -13,9 +18,43 @@ public class Controller {
 	 * @param quantity
 	 * @param category
 	 */
-	public String addProduct(String productName, String description, int price, int quantity, int category) {
-		// TODO - implement Controller.addProduct
-		throw new UnsupportedOperationException();
+	public String addProduct(String productName, String description, double price, int quantity, int cate,
+			int timesPurchased) throws RuntimeException {
+		if (productName.isEmpty())
+			throw new RuntimeException("Error. The name of the product is empty.");
+		if (quantity < 0)
+			throw new RuntimeException("Error. The quantity of product in inventory cannot be negative.");
+		Category category = null;
+		switch (cate) {
+			case 1:
+				category = Category.BOOKS;
+				break;
+			case 2:
+				category = Category.ELECTRONIC;
+				break;
+			case 3:
+				category = Category.APPAREL_AND_ACCESSORIES;
+				break;
+			case 4:
+				category = Category.FOODS_AND_BEVERAGES;
+				break;
+			case 5:
+				category = Category.STATIONARY;
+				break;
+			case 6:
+				category = Category.SPORTS;
+				break;
+			case 7:
+				category = Category.BEAUTY;
+				break;
+			case 8:
+				category = Category.TOYS;
+				break;
+			default:
+				throw new RuntimeException("Error. Invalid category.");
+		}
+		return mercadoLibre
+				.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
 	}
 
 	/**
