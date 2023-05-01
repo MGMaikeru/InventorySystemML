@@ -21,12 +21,13 @@ public class Main {
 		main.controller.addProduct("Product 7", "Description 7", 18.99, 7, 7, 4);
 		main.controller.addProduct("Product 8", "Description 8", 5.99, 1, 8, 1);
 		main.controller.addProduct("Product 9", "Description 9", 11.99, 3, 5, 6);
-		main.controller.addProduct("Product 10", "Description 10", 8.99, 5, 1, 5);
+		// main.controller.addProduct("Product 10", "Description 10", 8.99, 5, 1, 5);
 
 		System.out.println(main.controller.searchProduct(2, 10));
-
-		System.out.println(main.controller.searchInRange(4, 8));
-		System.out.println(main.controller.searchInInterval(1, "Product 1", "Product 8"));
+		System.out.println();
+		// System.out.println(main.controller.searchInRange(4, 8, 1, 1));
+		System.out.println(main.controller.searchInInterval("Product 1", "Product 5", 1, 1));
+		// System.out.println(main.controller.searchInInterval(1, "Product 1", "Product 8"));
 
 	}
 

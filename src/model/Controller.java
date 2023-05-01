@@ -45,23 +45,28 @@ public class Controller {
 	/**
 	 * @param buyerName
 	 * @param productList
+	 * @return
 	 */
-	public void addOrder(String buyerName, ArrayList<String> productList) {
-		// TODO - implement Controller.addOrder
-		throw new UnsupportedOperationException();
+	public String addOrder(String buyerName, ArrayList<String> productList) {
+		return null;
 	}
 
 	/**
 	 * @param productName
 	 * @param newQuantity
+	 * @return
+	 * @throws RuntimeException
 	 */
-	public String IncreaseQuantity(String productName, int newQuantity) {
-		// TODO - implement Controller.IncreaseQuantity
-		throw new UnsupportedOperationException();
+	public String IncreaseQuantity(String productName, int newQuantity) throws RuntimeException {
+		if (newQuantity <= 0) {
+			throw new RuntimeException("The amount to be added must be greater than zero.");
+		}
+		return mercadoLibre.increaseQuantity(productName, newQuantity);
 	}
 
 	/**
 	 * @param value
+	 * @return
 	 */
 	public String searchProduct(String value) {
 		Product product = mercadoLibre.searchProduct("name", value);
@@ -72,7 +77,7 @@ public class Controller {
 	 * @param searchVariable
 	 * @param value
 	 */
-	public String searchProduct(int searchVariable, double value) {
+	public String searchProduct(int searchVariable, double value) throws IllegalStateException {
 		Product product = switch (searchVariable) {
 			case 1 -> mercadoLibre.searchProduct("price", value);
 			case 2 -> mercadoLibre.searchProduct("timesPurchased", value);
@@ -109,31 +114,71 @@ public class Controller {
 	}
 
 	/**
-	 * @param minimum
-	 * @param maximum
-	 */
-	public ArrayList<Product> searchInRange(int minimum, int maximum) {
-		return mercadoLibre.searchInRange("timesPurchased", minimum, maximum);
-	}
-
-	/**
+	 * Searches for products within a specified range of a given search variable and returns the string representation of the matches.
 	 *
-	 * @param variable
-	 * @param prefix
-	 * @param finalPrefix
-	 * @return
+	 * @param searchVariable The search variable code (1 for price, 2 for timesPurchased).
+	 * @param minimum        The minimum value of the range.
+	 * @param maximum        The maximum value of the range.
+	 * @param senseSort      The sense of sort (1 for ascending, 2 for descending).
+	 * @param sortVariable   The sorting variable code (1 for name, 2 for price, 3 for category, 4 for timesPurchased).
+	 * @return The string representation of the product matches within the specified range.
+	 * @throws IllegalStateException If an unexpected search variable code is provided.
 	 */
-	public ArrayList<Product> searchInInterval(int variable, String prefix, String finalPrefix) {
-		return mercadoLibre.searchInInterval("name", prefix, finalPrefix);
+	public String searchInRange(int searchVariable, double minimum, double maximum, int senseSort, int sortVariable) throws IllegalStateException {
+
+		ArrayList<Product> matches = switch (searchVariable) {
+			case 1 -> mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariable(sortVariable));
+			case 2 ->
+					mercadoLibre.searchInRange("timesPurchased", minimum, maximum, senseSort, sortVariable(sortVariable));
+			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
+		};
+		return printProductList(matches);
 	}
 
 	/**
-	 * @param senseSort
-	 * @param sortVariable
+	 * Searches for products within a specified interval and returns a String with the sorted result.
+	 *
+	 * @param startPrefix  The prefix indicating the start of the interval.
+	 * @param finalPrefix  The prefix indicating the end of the interval.
+	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
+	 * @param sortVariable The variable to be used for sorting (e.g., "name", "price").
+	 * @return The String with the sorted list of products within the specified interval.
 	 */
-	public String sorting(int senseSort, int sortVariable) {
-		// TODO - implement Controller.sorting
-		throw new UnsupportedOperationException();
+	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort, int sortVariable) {
+		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort, sortVariable(sortVariable));
+		return printProductList(matches);
 	}
+
+	/**
+	 * Returns the corresponding string representation of the given variable code.
+	 *
+	 * @param variable The variable code.
+	 * @return The string representation of the variable.
+	 * @throws IllegalStateException If an invalid variable code is provided.
+	 */
+	private String sortVariable(int variable) throws IllegalStateException {
+		return switch (variable) {
+			case 1 -> "name";
+			case 2 -> "price";
+			case 3 -> "category";
+			case 4 -> "timesPurchased";
+			default -> throw new IllegalStateException("Error. Invalid sort variable.");
+		};
+	}
+
+	/**
+	 * Generates a string representation of the given list of products.
+	 *
+	 * @param list The list of products.
+	 * @return The string representation of the product list.
+	 */
+	private String printProductList(ArrayList<Product> list) {
+		StringBuilder msg = new StringBuilder();
+		for (Product product : list) {
+			msg.append(product).append("\n");
+		}
+		return (msg.length() == 0) ? "No matches were found for the criteria provided." : msg.toString();
+	}
+
 
 }

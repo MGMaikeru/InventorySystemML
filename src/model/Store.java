@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class Store {
@@ -44,7 +45,7 @@ public class Store {
 	 */
 	public String increaseQuantity(String productName, int newQuantity) {
 		Product product = searchProduct("name", productName);
-		String msg = "Product not fount";
+		String msg = "Product not found";
 		if (product != null) {
 			int before = product.getQuantityAvailable();
 			product.setQuantityAvailable(newQuantity);
@@ -59,7 +60,7 @@ public class Store {
 	 * @return
 	 */
 	public Product searchProduct(String searchVariable, String value) {
-		sortProductsByName();
+		sortProductsByName(products);
 		return searcherByString.binarySearch(products, searchVariable, value);
 	}
 
@@ -72,11 +73,11 @@ public class Store {
 		Product product = null;
 		switch (searchVariable) {
 			case "price" -> {
-				sortProductsByPrice();
+				sortProductsByPrice(products);
 				product = searcherByDouble.binarySearch(products, searchVariable, value);
 			}
 			case "timesPurchased" -> {
-				sortProductsByTimesPurchased();
+				sortProductsByTimesPurchased(products);
 				product = searcherByInteger.binarySearch(products, searchVariable, (int) value);
 			}
 		}
@@ -89,66 +90,101 @@ public class Store {
 	 * @return
 	 */
 	public Product searchProduct(String searchVariable, Category value) {
-		sortProductsByCategory();
+		sortProductsByCategory(products);
 		return searcherByCategory.binarySearch(products, searchVariable, value);
 	}
 
 	/**
-	 * @param variable
-	 * @param min
-	 * @param max
-	 */
-	public ArrayList<Product> searchInRange(String variable, int min, int max) {
-		sortProductsByTimesPurchased();
-		return searcherByInteger.filterRange(products, variable, min, max);
-	}
-
-	/**
-	 * @param variable
-	 * @param prefix
-	 * @param finalPrefix
-	 * @return
-	 */
-	public ArrayList<Product> searchInInterval(String variable, String prefix, String finalPrefix) {
-		sortProductsByName();
-		return searcherByString.filterRange(products, variable, prefix, finalPrefix);
-	}
-
-	/**
+	 * Searches for products within a specified range of a given search variable and returns the list of matches.
 	 *
+	 * @param searchVariable The search variable to filter on (e.g., "price", "timesPurchased").
+	 * @param min            The minimum value of the range.
+	 * @param max            The maximum value of the range.
+	 * @param senseSort      The sense of sort (1 for ascending, 2 for descending).
+	 * @param sortVariable   The variable to be used for sorting (e.g., "name", "price", "category", "timesPurchased").
+	 * @return The list of product matches within the specified range.
 	 */
-	private void sortProductsByName() {
-		products.sort(Comparator.comparing(Product::getName));
+	public ArrayList<Product> searchInRange(String searchVariable, double min, double max, int senseSort, String sortVariable) {
+		sortProductsByTimesPurchased(products);
+		ArrayList<Product> matches = switch (searchVariable) {
+			case "price" -> searcherByDouble.filterRange(products, searchVariable, min, max);
+			case "timesPurchased" -> searcherByInteger.filterRange(products, searchVariable, (int) min, (int) max);
+		};
+		return sortProducts(matches, senseSort, sortVariable);
 	}
 
 	/**
+	 * Searches for products within a specified interval and returns the sorted result.
 	 *
+	 * @param variable     The variable to search for (e.g., "name", "price").
+	 * @param startPrefix  The prefix indicating the start of the interval.
+	 * @param finalPrefix  The prefix indicating the end of the interval.
+	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
+	 * @param sortVariable The variable to be used for sorting (e.g., "name", "price").
+	 * @return The sorted list of products within the specified interval.
 	 */
-	private void sortProductsByPrice() {
-		products.sort(Comparator.comparing(Product::getPrice));
+	public ArrayList<Product> searchInInterval(String variable, String startPrefix, String finalPrefix, int senseSort, String sortVariable) {
+		sortProductsByName(products);
+		ArrayList<Product> matches = searcherByString.filterRange(products, variable, startPrefix, finalPrefix);
+		return sortProducts(matches, senseSort, sortVariable);
 	}
 
 	/**
+	 * Sorts the products list by name in ascending order.
 	 *
+	 * @param productList products list.
 	 */
-	private void sortProductsByTimesPurchased() {
-		products.sort(Comparator.comparing(Product::getTimesPurchased));
+	private void sortProductsByName(ArrayList<Product> productList) {
+		productList.sort(Comparator.comparing(Product::getName));
 	}
 
 	/**
+	 * Sorts the products list by price in ascending order.
 	 *
+	 * @param productList products list.
 	 */
-	private void sortProductsByCategory() {
-		products.sort(Comparator.comparing(Product::getCategory));
+	private void sortProductsByPrice(ArrayList<Product> productList) {
+		productList.sort(Comparator.comparing(Product::getPrice));
 	}
 
 	/**
-	 * @param sense
-	 * @param variable
+	 * Sorts the products list by the number of times purchased in ascending order.
+	 *
+	 * @param productList products list.
 	 */
-	public ArrayList<Product> sort(int sense, int variable) {
-		// TODO - implement Store.sort
-		throw new UnsupportedOperationException();
+	private void sortProductsByTimesPurchased(ArrayList<Product> productList) {
+		productList.sort(Comparator.comparing(Product::getTimesPurchased));
+	}
+
+	/**
+	 * Sorts the products list by category in ascending order.
+	 *
+	 * @param productList products list.
+	 */
+	private void sortProductsByCategory(ArrayList<Product> productList) {
+		productList.sort(Comparator.comparing(Product::getCategory));
+	}
+
+	/**
+	 * Sorts the given list of products based on the specified sorting variable and sense of sort.
+	 *
+	 * @param matches      The list of products to be sorted.
+	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
+	 * @param sortVariable The variable to be used for sorting (e.g., "name", "price").
+	 * @return The sorted list of products.
+	 * @throws RuntimeException If an invalid sense of ordering is provided.
+	 */
+	private ArrayList<Product> sortProducts(ArrayList<Product> matches, int senseSort, String sortVariable) throws RuntimeException {
+		switch (sortVariable) {
+			case "name" -> sortProductsByName(matches);
+			case "price" -> sortProductsByPrice(matches);
+		}
+		if (senseSort == 2) {
+			Collections.reverse(matches);
+		} else if (senseSort != 1) {
+			throw new RuntimeException("Error. Invalid sense of ordering");
+		}
+		return matches;
 	}
 
 }
