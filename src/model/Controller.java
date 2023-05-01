@@ -46,9 +46,15 @@ public class Controller {
 	 * @param buyerName
 	 * @param productList
 	 */
-	public void addOrder(String buyerName, ArrayList<String> productList) {
-		// TODO - implement Controller.addOrder
-		throw new UnsupportedOperationException();
+	public String addOrder(String buyerName, String id, ArrayList<Product> productList) {
+		if (buyerName.isEmpty())
+			throw new RuntimeException("Error. The name of buyer is empty.");
+		if (id.isEmpty())
+			throw new RuntimeException("Error. The order id is empty.");
+		if (productList.isEmpty())
+			throw new RuntimeException("Error. The product list is empty.");
+
+		return mercadoLibre.addOrder(new Order(buyerName, id, productList));
 	}
 
 	/**

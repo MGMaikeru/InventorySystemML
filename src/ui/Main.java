@@ -3,14 +3,69 @@ package ui;
 import model.Category;
 import model.Controller;
 
+import java.util.Scanner;
+
 public class Main {
-	private Controller controller;
+	private final Controller controller;
+	private final Scanner input;
 
 	public Main() {
+		input = new Scanner(System.in);
 		controller = new Controller();
 	}
 
 	public static void main(String[] args) {
+		System.out.println("<<<<< Passenger Sort System >>>>>");
+		Main m = new Main();
+		m.displayStartMenu();
+	}
+
+	public void displayStartMenu() {
+		System.out.print("1) \n2)Register new order \n3)Generate ordered entry list \n4)Generate ordered exit list \n5) Exit\nSelected: ");
+		int option = input.nextInt();
+		executeOption(option);
+	}
+
+	public void executeOption(int option) {
+		switch (option) {
+			case 1:
+
+				break;
+			case 2:
+
+				break;
+			case 3:
+
+				break;
+			case 4:
+
+				break;
+			case 5:
+				System.out.println("\nThanks for using the program. Until next time!");
+				break;
+			default:
+				System.out.println("Error. Type a valid option.\n");
+				break;
+		}
+		if (option != 5)
+			displayStartMenu();
+
+	}
+
+	public void registerProduct(){
+		System.out.println("Type buyer's name: ");
+		String buyerName = input.nextLine();
+		System.out.println("Type order id: ");
+		String orderId = input.nextLine();
+		while(input.hasNext("N")){
+			System.out.println("Type product: ");
+			String productName = input.nextLine();
+			System.out.println("Type quantity: ");
+			int productQuantity = input.nextInt();
+		}
+	}
+
+	/*public static void main(String[] args) {
 		Main main = new Main();
 		main.controller.addProduct("Product 2", "Description 2", 10.99, 8, 2, 5);
 		main.controller.addProduct("Product 3", "Description 3", 24.99, 3, 3, 10);
@@ -28,6 +83,6 @@ public class Main {
 		System.out.println(main.controller.searchInRange(4, 8));
 		System.out.println(main.controller.searchInInterval(1, "Product 1", "Product 8"));
 
-	}
+	}*/
 
 }

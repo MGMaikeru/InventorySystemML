@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -18,7 +20,7 @@ public class Order {
 
 	public void calculateTotalPrice(){
 		for (Product o: productList) {
-			totalPrice += o.getPrice() * o.getQuanAvailable();
+			totalPrice += o.getPrice() * o.getQuantityAvailable();
 		}
 	}
 
