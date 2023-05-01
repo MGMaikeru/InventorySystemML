@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Store {
 
+	private ArrayList<Order> orders;
+
 	public Store() {
-		// TODO - implement Store.Store
-		throw new UnsupportedOperationException();
+		orders = new ArrayList<>();
 	}
 
 	/**
@@ -91,8 +94,9 @@ public class Store {
 	 * @param order
 	 */
 	public String addOrder(Order order) {
-		// TODO - implement Store.addOrder
-		throw new UnsupportedOperationException();
+		if (order == null) return "Invalid order!";
+		orders.add(order);
+		return "Order number" + order.getId() + "has been successful registered!";
 	}
 
 	/**

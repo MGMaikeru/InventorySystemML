@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Controller {
 
+	private Store store;
+
 	public Controller() {
-		// TODO - implement Controller.Controller
-		throw new UnsupportedOperationException();
+		store = new Store();
 	}
 
 	/**
@@ -21,11 +24,11 @@ public class Controller {
 	/**
 	 * 
 	 * @param buyerName
+	 * @param id
 	 * @param productList
 	 */
-	public void addOrder(String buyerName, ArrayList<String> productList) {
-		// TODO - implement Controller.addOrder
-		throw new UnsupportedOperationException();
+	public void addOrder(String buyerName, String id, ArrayList<String> productList) {
+		store.addOrder(new Order(buyerName, id, productList));
 	}
 
 	/**
