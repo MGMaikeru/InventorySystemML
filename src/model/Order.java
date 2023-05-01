@@ -12,6 +12,7 @@ public class Order {
 	private ArrayList<Product> productList;
 
 	public Order(String buyerName, String id, ArrayList<Product> productList) {
+		this.productList = new ArrayList<>();
 		this.buyerName = buyerName;
 		this.id = id;
 		this.productList.addAll(productList);
