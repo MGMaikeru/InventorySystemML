@@ -19,4 +19,64 @@ public class Product {
 		this.timesPurchased = timesPurchased;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public double getPrice() {
+		return this.price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public int getQuantityAvailable() {
+		return this.quantityAvailable;
+	}
+
+	public void setQuantityAvailable(int quantityAvailable) {
+		this.quantityAvailable = quantityAvailable;
+	}
+
+	public Category getCategory() {
+		return this.category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public int getTimesPurchased() {
+		return this.timesPurchased;
+	}
+
+	public void setTimesPurchased(int timesPurchased) {
+		this.timesPurchased = timesPurchased;
+	}
+
+	@Override
+	public String toString() {
+		return "{" +
+				" name='" + getName() + "'" +
+				", description='" + getDescription() + "'" +
+				", price='" + getPrice() + "'" +
+				", quantityAvailable='" + getQuantityAvailable() + "'" +
+				", category='" + getCategory() + "'" +
+				", timesPurchased='" + getTimesPurchased() + "'" +
+				"}";
+	}
+
 }

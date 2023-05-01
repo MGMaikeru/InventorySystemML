@@ -4,61 +4,45 @@ import java.util.ArrayList;
 
 public class Controller {
 
-	private Store mercadoLibre;
+	private final Store mercadoLibre;
 
 	public Controller() {
 		mercadoLibre = new Store();
 	}
 
 	/**
-	 * 
-	 * @param productName
-	 * @param description
-	 * @param price
-	 * @param quantity
-	 * @param category
+	 * Adds a new product to the MercadoLibre system.
+	 *
+	 * @param productName    The name of the product.
+	 * @param description    The description of the product.
+	 * @param price          The price of the product.
+	 * @param quantity       The quantity of the product available in inventory.
+	 * @param cate           The code of the product category.
+	 * @param timesPurchased The number of times the product has been purchased.
+	 * @return A string representing the result of adding the product.
+	 * @throws RuntimeException If there is an error adding the product.
 	 */
 	public String addProduct(String productName, String description, double price, int quantity, int cate,
-			int timesPurchased) throws RuntimeException {
+							 int timesPurchased) throws RuntimeException {
 		if (productName.isEmpty())
 			throw new RuntimeException("Error. The name of the product is empty.");
 		if (quantity < 0)
 			throw new RuntimeException("Error. The quantity of product in inventory cannot be negative.");
-		Category category = null;
-		switch (cate) {
-			case 1:
-				category = Category.BOOKS;
-				break;
-			case 2:
-				category = Category.ELECTRONIC;
-				break;
-			case 3:
-				category = Category.APPAREL_AND_ACCESSORIES;
-				break;
-			case 4:
-				category = Category.FOODS_AND_BEVERAGES;
-				break;
-			case 5:
-				category = Category.STATIONARY;
-				break;
-			case 6:
-				category = Category.SPORTS;
-				break;
-			case 7:
-				category = Category.BEAUTY;
-				break;
-			case 8:
-				category = Category.TOYS;
-				break;
-			default:
-				throw new RuntimeException("Error. Invalid category.");
-		}
-		return mercadoLibre
-				.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
+		Category category = switch (cate) {
+			case 1 -> Category.BOOKS;
+			case 2 -> Category.ELECTRONIC;
+			case 3 -> Category.APPAREL_AND_ACCESSORIES;
+			case 4 -> Category.FOODS_AND_BEVERAGES;
+			case 5 -> Category.STATIONARY;
+			case 6 -> Category.SPORTS;
+			case 7 -> Category.BEAUTY;
+			case 8 -> Category.TOYS;
+			default -> throw new RuntimeException("Error. Invalid category.");
+		};
+		return mercadoLibre.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
 	}
 
 	/**
-	 * 
 	 * @param buyerName
 	 * @param productList
 	 */
@@ -68,7 +52,6 @@ public class Controller {
 	}
 
 	/**
-	 * 
 	 * @param productName
 	 * @param newQuantity
 	 */
@@ -78,27 +61,36 @@ public class Controller {
 	}
 
 	/**
-	 * 
-	 * @param searchVariable
 	 * @param value
 	 */
-	public String searchProduct(int searchVariable, int value) {
-		// TODO - implement Controller.searchProduct
-		throw new UnsupportedOperationException();
+	public String searchProduct(String value) {
+		Product product = mercadoLibre.searchProduct("name", value);
+		return printProduct(product);
 	}
 
 	/**
-	 * 
 	 * @param searchVariable
 	 * @param value
 	 */
-	public String searchProduct(int searchVariable, String value) {
-		// TODO - implement Controller.searchProduct
-		throw new UnsupportedOperationException();
+	public String searchProduct(int searchVariable, double value) {
+		Product product = switch (searchVariable) {
+			case 1 -> mercadoLibre.searchProduct("price", value);
+			case 2 -> mercadoLibre.searchProduct("timesPurchased", value);
+			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
+		};
+		return printProduct(product);
+	}
+
+	public String searchProduct(Category value) {
+		Product product = mercadoLibre.searchProduct("category", value);
+		return printProduct(product);
+	}
+
+	private String printProduct(Product product) {
+		return (product != null) ? product.toString() : "Not found.";
 	}
 
 	/**
-	 * 
 	 * @param searchVariable
 	 * @param value
 	 */
@@ -108,7 +100,6 @@ public class Controller {
 	}
 
 	/**
-	 * 
 	 * @param searchVariable
 	 * @param value
 	 */
@@ -118,29 +109,25 @@ public class Controller {
 	}
 
 	/**
-	 * 
-	 * @param variable
 	 * @param minimum
 	 * @param maximum
 	 */
-	public ArrayList<Product> searchInRange(int variable, int minimum, int maximum) {
-		// TODO - implement Controller.searchInRange
-		throw new UnsupportedOperationException();
+	public ArrayList<Product> searchInRange(int minimum, int maximum) {
+		return mercadoLibre.searchInRange("timesPurchased", minimum, maximum);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param variable
 	 * @param prefix
-	 * @param suffix
+	 * @param finalPrefix
+	 * @return
 	 */
-	public ArrayList<Product> searchInInterval(int variable, String prefix, String suffix) {
-		// TODO - implement Controller.searchInInterval
-		throw new UnsupportedOperationException();
+	public ArrayList<Product> searchInInterval(int variable, String prefix, String finalPrefix) {
+		return mercadoLibre.searchInInterval("name", prefix, finalPrefix);
 	}
 
 	/**
-	 * 
 	 * @param senseSort
 	 * @param sortVariable
 	 */
