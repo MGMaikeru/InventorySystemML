@@ -47,8 +47,20 @@ public class Controller {
 	 * @param productList
 	 * @return
 	 */
+<<<<<<< HEAD
 	public String addOrder(String buyerName, ArrayList<String> productList) {
 		return null;
+=======
+	public String addOrder(String buyerName, String id, ArrayList<Product> productList) {
+		if (buyerName.isEmpty())
+			throw new RuntimeException("Error. The name of buyer is empty.");
+		if (id.isEmpty())
+			throw new RuntimeException("Error. The order id is empty.");
+		if (productList.isEmpty())
+			throw new RuntimeException("Error. The product list is empty.");
+
+		return mercadoLibre.addOrder(new Order(buyerName, id, productList));
+>>>>>>> 4758f4e7f1e5ead89cb713fdb4b864764109e68f
 	}
 
 	/**

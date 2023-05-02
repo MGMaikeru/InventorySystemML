@@ -78,5 +78,4 @@ public class Product {
 				", timesPurchased='" + getTimesPurchased() + "'" +
 				"}";
 	}
-
 }
