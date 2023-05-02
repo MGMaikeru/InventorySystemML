@@ -7,39 +7,46 @@ import java.util.ArrayList;
 
 public class ControllerTest {
 
-	private Controller c;
+	private Controller controller;
 	private ArrayList<Product> products;
+	private final Product product1 = new Product("Miguel in Wonderland", "An unexpected adventure awaits Miguel in" +
+			" wonderland. Join him on his journey.", 100000, 7, Category.BOOKS, 0);
+	private final Product product2 = new Product("Cboc Two", "An incredible video game console.", 2000000,
+			9, Category.ELECTRONIC, 0);
+	private final Product product3 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
+			7, Category.ELECTRONIC, 0);
 
-	public void setup1() {
-		c = new Controller();
+	public void setupStage1() {
+		controller = new Controller();
 	}
 
-	public void setup2() {
-		c = new Controller();
+	public void setupStage2() {
+		controller = new Controller();
 		products = new ArrayList<>();
-		Product product1 = new Product("Miguel in Wonderland", "An unexpected adventure awaits Miguel in" +
-				" wonderland. Join him on his journey.", 100000, 7, Category.BOOKS, 0);
-		Product product2 = new Product("Cboc Two", "An incredible video game console.", 2000000,
-				9, Category.ELECTRONIC, 0);
-		Product product3 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
-				7, Category.ELECTRONIC, 0);
 		products.add(product1);
 		products.add(product2);
 		products.add(product3);
 	}
 
 	@Test
-	public void AddProductTest1() {
-		setup1();
-		Assertions.assertEquals("Product added!", c.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
+	public void addProductTest1() {
+		setupStage1();
+		Assertions.assertEquals("Product added!", controller.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
 				"Join him on his journey", 100000, 7, 1, 0));
+		// Complete test
 	}
 
 	@Test
-	public void AddProductTest2() {
-		setup1();
+	public void addProductTest2() {
+		// Falta diseñar y programar esta prueba (El espacio de la tabla está vacío para esto)
+		Assertions.fail();
+	}
+
+	@Test
+	public void addProductTest3() {
+		setupStage1();
 		try {
-			c.addProduct("", "An unexpected adventure awaits Miguel in wonderland. " +
+			controller.addProduct("", "An unexpected adventure awaits Miguel in wonderland. " +
 					"Join him on his journey", 100000, 7, 1, 0);
 			Assertions.fail("An exception is expected as the name is empty.");
 		} catch (RuntimeException e) {
@@ -48,10 +55,10 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void AddProductTest3() {
-		setup1();
+	public void addProductTest4() {
+		setupStage1();
 		try {
-			c.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
+			controller.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
 					"Join him on his journey", 100000, -5, 1, 0);
 			Assertions.fail("An exception is expected as the quantity is negative.");
 		} catch (RuntimeException e) {
@@ -60,28 +67,42 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void AddProductTest4() {
-		setup1();
+	public void addProductTest5() {
+		setupStage1();
 		try {
-			c.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
+			controller.addProduct("Miguel in wonderland", "An unexpected adventure awaits Miguel in wonderland. " +
 					"Join him on his journey", 100000, 7, 10, 0);
-			Assertions.fail("An exception is expected because the category don´t exist");
+			Assertions.fail("An exception is expected because the category don't exist");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. Invalid category.", e.getMessage());
 		}
 	}
 
 	@Test
-	public void AddOrderTest1() {
-		setup2();
-		Assertions.assertEquals("Order added!", c.addOrder("Miguel", "1", products));
+	public void addOrderTest1() {
+		setupStage2();
+		Assertions.assertEquals("Order added!", controller.addOrder("Miguel", products));
+		assert 4 == product1.getQuantityAvailable();
+		assert 4 == product2.getQuantityAvailable();
 	}
 
 	@Test
-	public void AddOrderTest2() {
-		setup2();
+	public void addOrderTest2() {
+		// Program method as defined in the design
+		Assertions.fail();
+	}
+
+	@Test
+	public void addOrderTest3() {
+		// Programar la prueba de CREAR DOS ORDENES Y VALIDAR QUE EL ID DE AMBOS SEA DIFERENTE
+		Assertions.fail();
+	}
+
+	@Test
+	public void addOrderTest4() {
+		setupStage2();
 		try {
-			c.addOrder("", "1", products);
+			controller.addOrder("", products);
 			Assertions.fail("An exception is expected as the buyer name is empty.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. The name of buyer is empty.", e.getMessage());
@@ -89,25 +110,60 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void AddOrderTest3() {
-		setup2();
+	public void addOrderTest5() {
+		// Program method as defined in the design
+		Assertions.fail();
+	}
+
+	@Test
+	public void addOrderTest6() { // Add to documentation
+		setupStage2();
+		ArrayList<Product> products1 = new ArrayList<>();
 		try {
-			c.addOrder("Miguel", "", products);
-			Assertions.fail("An exception is expected as the order id is empty.");
+			controller.addOrder("Miguel", products1);
+			Assertions.fail("An exception is expected as the product list is empty.");
 		} catch (RuntimeException e) {
-			Assertions.assertEquals("Error. The order id is empty.", e.getMessage());
+			String expected = "Error. It is not possible to create an order with an empty product list.";
+			Assertions.assertEquals(expected, e.getMessage());
 		}
 	}
 
 	@Test
-	public void AddOrderTest4() {
-		setup2();
-		ArrayList<Product> products1 = new ArrayList<>();
+	public void increaseQuantityTest1() {
+		setupStage1();
+		controller.increaseQuantity("HD laptop", 3);
+		assert 10 == product3.getQuantityAvailable();
+	}
+
+	@Test
+	public void increaseQuantityTest2() {
+		setupStage1();
+		controller.increaseQuantity("HD laptop", 0);
+		assert 7 == product3.getQuantityAvailable();
+	}
+
+	@Test
+	public void increaseQuantityTest3() {
+		setupStage1();
 		try {
-			c.addOrder("Miguel", "23", products1);
-			Assertions.fail("An exception is expected as the product list is empty.");
+			controller.increaseQuantity("HP laptop", -2);
+			Assertions.fail("An exception is expected because the increase amount is negative.");
 		} catch (RuntimeException e) {
-			Assertions.assertEquals("Error. The product list is empty.", e.getMessage());
+			Assertions.assertEquals("Error. The increase amount quantity cannot be negative.", e.getMessage());
+			assert 7 == product3.getQuantityAvailable();
 		}
 	}
+
+	@Test
+	public void increaseQuantityTest4() {
+		setupStage2();
+		try {
+			controller.increaseQuantity("", 5);
+			Assertions.fail("An exception is expected because the product name is empty.");
+		} catch (RuntimeException e) {
+			Assertions.assertEquals("Error. The name of product is empty.", e.getMessage());
+			assert 7 == product3.getQuantityAvailable();
+		}
+	}
+
 }

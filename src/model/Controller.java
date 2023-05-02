@@ -47,19 +47,20 @@ public class Controller {
 	 * Adds an order with the given buyer name, order ID, and product list to the MercadoLibre system.
 	 *
 	 * @param buyerName   The name of the buyer.
-	 * @param id          The ID of the order.
 	 * @param productList The list of products in the order.
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, String id, ArrayList<Product> productList) {
+	public String addOrder(String buyerName, ArrayList<Product> productList) {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
-		if (id.isEmpty())
-			throw new RuntimeException("Error. The order id is empty.");
 		if (productList.isEmpty())
-			throw new RuntimeException("Error. The product list is empty.");
-		return mercadoLibre.addOrder(new Order(buyerName, id, productList));
+			throw new RuntimeException("Error. It is not possible to create an order with an empty product list.");
+		return mercadoLibre.addOrder(new Order(buyerName, generateOrderId(), productList));
+	}
+
+	private String generateOrderId() {
+		return null; // Program method
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class Controller {
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the new quantity is less than or equal to zero.
 	 */
-	public String IncreaseQuantity(String productName, int newQuantity) throws RuntimeException {
+	public String increaseQuantity(String productName, int newQuantity) throws RuntimeException {
 		if (newQuantity <= 0) {
 			throw new RuntimeException("The amount to be added must be greater than zero.");
 		}
