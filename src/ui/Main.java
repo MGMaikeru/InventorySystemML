@@ -52,12 +52,12 @@ public class Main {
 
 	}
 
-	public void registerProduct(){
+	public void registerProduct() {
 		System.out.println("Type buyer's name: ");
 		String buyerName = input.nextLine();
 		System.out.println("Type order id: ");
 		String orderId = input.nextLine();
-		while(input.hasNext("N")){
+		while (input.hasNext("N")) {
 			System.out.println("Type product: ");
 			String productName = input.nextLine();
 			System.out.println("Type quantity: ");

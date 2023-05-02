@@ -39,18 +39,19 @@ public class Controller {
 			case 8 -> Category.TOYS;
 			default -> throw new RuntimeException("Error. Invalid category.");
 		};
-		return mercadoLibre.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
+		return mercadoLibre
+				.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
 	}
 
 	/**
-	 * @param buyerName
-	 * @param productList
-	 * @return
+	 * Adds an order with the given buyer name, order ID, and product list to the MercadoLibre system.
+	 *
+	 * @param buyerName   The name of the buyer.
+	 * @param id          The ID of the order.
+	 * @param productList The list of products in the order.
+	 * @return A message indicating the success or failure of the operation.
+	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-<<<<<<< HEAD
-	public String addOrder(String buyerName, ArrayList<String> productList) {
-		return null;
-=======
 	public String addOrder(String buyerName, String id, ArrayList<Product> productList) {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
@@ -58,16 +59,16 @@ public class Controller {
 			throw new RuntimeException("Error. The order id is empty.");
 		if (productList.isEmpty())
 			throw new RuntimeException("Error. The product list is empty.");
-
 		return mercadoLibre.addOrder(new Order(buyerName, id, productList));
->>>>>>> 4758f4e7f1e5ead89cb713fdb4b864764109e68f
 	}
 
 	/**
-	 * @param productName
-	 * @param newQuantity
-	 * @return
-	 * @throws RuntimeException
+	 * Increases the quantity of a product with the given name by the specified amount.
+	 *
+	 * @param productName The name of the product to increase the quantity.
+	 * @param newQuantity The amount to be added to the product's quantity.
+	 * @return A message indicating the success or failure of the operation.
+	 * @throws RuntimeException If the new quantity is less than or equal to zero.
 	 */
 	public String IncreaseQuantity(String productName, int newQuantity) throws RuntimeException {
 		if (newQuantity <= 0) {
@@ -77,8 +78,10 @@ public class Controller {
 	}
 
 	/**
-	 * @param value
-	 * @return
+	 * Searches for a product with the given value in the name field and returns its details.
+	 *
+	 * @param value The value to search for.
+	 * @return A string representation of the product's details.
 	 */
 	public String searchProduct(String value) {
 		Product product = mercadoLibre.searchProduct("name", value);
@@ -98,6 +101,10 @@ public class Controller {
 		return printProduct(product);
 	}
 
+	/**
+	 * @param value
+	 * @return
+	 */
 	public String searchProduct(Category value) {
 		Product product = mercadoLibre.searchProduct("category", value);
 		return printProduct(product);
@@ -126,17 +133,23 @@ public class Controller {
 	}
 
 	/**
-	 * Searches for products within a specified range of a given search variable and returns the string representation of the matches.
+	 * Searches for products within a specified range of a given search variable and
+	 * returns the string representation of the matches.
 	 *
-	 * @param searchVariable The search variable code (1 for price, 2 for timesPurchased).
+	 * @param searchVariable The search variable code (1 for price, 2 for
+	 *                       timesPurchased).
 	 * @param minimum        The minimum value of the range.
 	 * @param maximum        The maximum value of the range.
 	 * @param senseSort      The sense of sort (1 for ascending, 2 for descending).
-	 * @param sortVariable   The sorting variable code (1 for name, 2 for price, 3 for category, 4 for timesPurchased).
-	 * @return The string representation of the product matches within the specified range.
-	 * @throws IllegalStateException If an unexpected search variable code is provided.
+	 * @param sortVariable   The sorting variable code (1 for name, 2 for price, 3
+	 *                       for category, 4 for timesPurchased).
+	 * @return The string representation of the product matches within the specified
+	 * range.
+	 * @throws IllegalStateException If an unexpected search variable code is
+	 *                               provided.
 	 */
-	public String searchInRange(int searchVariable, double minimum, double maximum, int senseSort, int sortVariable) throws IllegalStateException {
+	public String searchInRange(int searchVariable, double minimum, double maximum, int senseSort, int sortVariable)
+			throws IllegalStateException {
 
 		ArrayList<Product> matches = switch (searchVariable) {
 			case 1 -> mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariable(sortVariable));
@@ -148,16 +161,20 @@ public class Controller {
 	}
 
 	/**
-	 * Searches for products within a specified interval and returns a String with the sorted result.
+	 * Searches for products within a specified interval and returns a String with
+	 * the sorted result.
 	 *
 	 * @param startPrefix  The prefix indicating the start of the interval.
 	 * @param finalPrefix  The prefix indicating the end of the interval.
 	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
-	 * @param sortVariable The variable to be used for sorting (e.g., "name", "price").
-	 * @return The String with the sorted list of products within the specified interval.
+	 * @param sortVariable The variable to be used for sorting (e.g., "name",
+	 *                     "price").
+	 * @return The String with the sorted list of products within the specified
+	 * interval.
 	 */
 	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort, int sortVariable) {
-		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort, sortVariable(sortVariable));
+		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort,
+				sortVariable(sortVariable));
 		return printProductList(matches);
 	}
 
@@ -191,6 +208,5 @@ public class Controller {
 		}
 		return (msg.length() == 0) ? "No matches were found for the criteria provided." : msg.toString();
 	}
-
 
 }

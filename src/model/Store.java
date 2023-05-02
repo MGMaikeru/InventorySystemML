@@ -109,6 +109,7 @@ public class Store {
 		ArrayList<Product> matches = switch (searchVariable) {
 			case "price" -> searcherByDouble.filterRange(products, searchVariable, min, max);
 			case "timesPurchased" -> searcherByInteger.filterRange(products, searchVariable, (int) min, (int) max);
+			default -> throw new IllegalStateException("Invalid search variable: " + searchVariable);
 		};
 		return sortProducts(matches, senseSort, sortVariable);
 	}
