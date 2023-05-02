@@ -1,4 +1,4 @@
-package test.model;
+package model;
 
 import model.Category;
 import model.Controller;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static model.Category.ELECTRONIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
