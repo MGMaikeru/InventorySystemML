@@ -149,7 +149,7 @@ public class ControllerTest {
 			controller.increaseQuantity("HP laptop", -2);
 			Assertions.fail("An exception is expected because the increase amount is negative.");
 		} catch (RuntimeException e) {
-			Assertions.assertEquals("Error. The increase amount quantity cannot be negative.", e.getMessage());
+			Assertions.assertEquals("Error. The amount to be added must be greater or equals to zero.", e.getMessage());
 			assert 7 == product3.getQuantityAvailable();
 		}
 	}
@@ -161,7 +161,7 @@ public class ControllerTest {
 			controller.increaseQuantity("", 5);
 			Assertions.fail("An exception is expected because the product name is empty.");
 		} catch (RuntimeException e) {
-			Assertions.assertEquals("Error. The name of product is empty.", e.getMessage());
+			Assertions.assertEquals("Error. The name of the product to which the quantity is to be increased cannot be empty.", e.getMessage());
 			assert 7 == product3.getQuantityAvailable();
 		}
 	}

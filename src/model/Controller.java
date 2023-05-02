@@ -79,9 +79,10 @@ public class Controller {
 	 * @throws RuntimeException If the new quantity is less than or equal to zero.
 	 */
 	public String increaseQuantity(String productName, int newQuantity) throws RuntimeException {
-		if (newQuantity <= 0) {
-			throw new RuntimeException("The amount to be added must be greater than zero.");
-		}
+		if (productName.isEmpty())
+			throw new RuntimeException("Error. The name of the product to which the quantity is to be increased cannot be empty.");
+		if (newQuantity < 0)
+			throw new RuntimeException("Error. The amount to be added must be greater or equals to zero.");
 		return mercadoLibre.increaseQuantity(productName, newQuantity);
 	}
 

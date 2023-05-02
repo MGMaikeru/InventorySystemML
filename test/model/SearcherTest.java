@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public class SearcherTest {
 
-	private Product product1 = new Product("Cboc Two", "An incredible video game console.", 120000.0, 2, Category.ELECTRONIC, 6);
-	private Product product2 = new Product("Ball", "Soccer ball", 200000.0, 7, Category.SPORTS, 4);
-	private Product product3 = new Product("Miguel in Wonderland", "An unexpected adventure awaits Miguel in wonderland. Join him on his journey.", 300000.0, 2, Category.BOOKS, 5);
+	private final Product product1 = new Product("Cboc Two", "An incredible video game console.", 120000.0, 2, Category.ELECTRONIC, 6);
+	private final Product product2 = new Product("Ball", "Soccer ball", 200000.0, 7, Category.SPORTS, 4);
+	private final Product product3 = new Product("Miguel in Wonderland", "An unexpected adventure awaits Miguel in wonderland. Join him on his journey.", 300000.0, 2, Category.BOOKS, 5);
 
 	private ArrayList<Product> productsList;
 	private Searcher<Product, String> searcherByString;
