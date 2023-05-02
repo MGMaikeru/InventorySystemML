@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Controller {
 
@@ -59,8 +60,14 @@ public class Controller {
 		return mercadoLibre.addOrder(new Order(buyerName, generateOrderId(), productList));
 	}
 
+	/**
+	 * Generates a unique order ID using UUID.
+	 *
+	 * @return A string representation of the generated order ID.
+	 */
 	private String generateOrderId() {
-		return null; // Program method
+		UUID uniqueID = UUID.randomUUID();
+		return uniqueID.toString();
 	}
 
 	/**
@@ -103,8 +110,10 @@ public class Controller {
 	}
 
 	/**
-	 * @param value
-	 * @return
+	 * Searches for a product with the given category value and returns its details.
+	 *
+	 * @param value The category value to search for.
+	 * @return A string representation of the product's details.
 	 */
 	public String searchProduct(Category value) {
 		Product product = mercadoLibre.searchProduct("category", value);
