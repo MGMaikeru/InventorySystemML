@@ -3,6 +3,7 @@ package ui;
 import model.Category;
 import model.Controller;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -32,7 +33,7 @@ public class Main {
 
 				break;
 			case 2:
-
+				registerProduct();
 				break;
 			case 3:
 
@@ -54,15 +55,22 @@ public class Main {
 
 	public void registerProduct() {
 		System.out.println("Type buyer's name: ");
+		input.nextLine();
 		String buyerName = input.nextLine();
-		System.out.println("Type order id: ");
-		String orderId = input.nextLine();
-		while (input.hasNext("N")) {
+		String isContinue = "Y";
+		ArrayList<String> products = new ArrayList<>();
+		while (isContinue.equals("Y")) {
 			System.out.println("Type product: ");
 			String productName = input.nextLine();
 			System.out.println("Type quantity: ");
 			int productQuantity = input.nextInt();
+			if(!controller.checkProduct(productName, productQuantity))
+				System.out.println("Product doesn't exist or product out of stock!");
+			System.out.println("¿Want you add another product? Y/N");
+			input.nextLine();
+			isContinue = input.nextLine();
 		}
+		controller.addOrder(buyerName, products);
 	}
 
 	/*public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package model;
 
-public class Product {
+public class Product implements Cloneable {
 
 	private String name;
 	private String description;
@@ -64,7 +64,11 @@ public class Product {
 	}
 
 	public void setTimesPurchased(int timesPurchased) {
-		this.timesPurchased = timesPurchased;
+		this.timesPurchased += timesPurchased;
+	}
+
+	public Product clone() throws CloneNotSupportedException {
+		return (Product) super.clone();
 	}
 
 	@Override
