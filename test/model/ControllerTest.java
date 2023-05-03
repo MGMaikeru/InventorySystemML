@@ -122,7 +122,14 @@ public class ControllerTest {
 	public void addOrderTest3() {
 		setupStage2();
 		try {
-			// controller.addOrder("", products);
+			productsAndQuantitiesList.add("Miguel in wonderland");
+			productsAndQuantitiesList.add("3");
+			productsAndQuantitiesList.add("Cboc Two");
+			productsAndQuantitiesList.add("5");
+			productsAndQuantitiesList.add("HD laptop");
+			productsAndQuantitiesList.add("2");
+
+			String result = controller.addOrder("", productsAndQuantitiesList);
 			Assertions.fail("An exception is expected as the buyer name is empty.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. The name of buyer is empty.", e.getMessage());
@@ -130,17 +137,28 @@ public class ControllerTest {
 	}
 
 	@Test
-	public void addOrderTest5() {
-		// Program method as defined in the design
-		Assertions.fail();
+	public void addOrderTest4() {
+		setupStage2();
+		try {
+			productsAndQuantitiesList.add("Miguel in wonderland");
+			productsAndQuantitiesList.add("50");
+			productsAndQuantitiesList.add("Cboc Two");
+			productsAndQuantitiesList.add("5");
+			productsAndQuantitiesList.add("HD laptop");
+			productsAndQuantitiesList.add("2");
+
+			String result = controller.addOrder("", productsAndQuantitiesList);
+			Assertions.fail("An exception is expected as the product -Miguel in wonderland- exceeds the stock of the product.");
+		} catch (RuntimeException e) {
+			Assertions.assertEquals("Error. One of the products exceeds the quantity available.", e.getMessage());
+		}
 	}
 
 	@Test
-	public void addOrderTest6() { // Add to documentation
+	public void addOrderTest5() {
 		setupStage2();
-		ArrayList<Product> products1 = new ArrayList<>();
 		try {
-			// controller.addOrder("Miguel", products1);
+			controller.addOrder("Miguel", productsAndQuantitiesList);
 			Assertions.fail("An exception is expected as the product list is empty.");
 		} catch (RuntimeException e) {
 			String expected = "Error. It is not possible to create an order with an empty product list.";

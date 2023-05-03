@@ -48,7 +48,7 @@ public class Store {
 		String msg = "Product not found";
 		if (product != null) {
 			int before = product.getQuantityAvailable();
-			product.setQuantityAvailable(newQuantity);
+			product.setQuantityAvailable(before + newQuantity);
 			msg = "Quantity of the product " + product.getName() + " modified from " + before + " to " + product.getQuantityAvailable();
 		}
 		return msg;
