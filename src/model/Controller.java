@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
 public class Controller {
 
 	private final Store mercadoLibre;
@@ -52,12 +53,40 @@ public class Controller {
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, ArrayList<Product> productList) {
+	public String addOrder(String buyerName, ArrayList<String> productList) {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
 		if (productList.isEmpty())
 			throw new RuntimeException("Error. It is not possible to create an order with an empty product list.");
-		return mercadoLibre.addOrder(new Order(buyerName, generateOrderId(), productList));
+
+		ArrayList<Product> products = new ArrayList<>();
+
+		for (int i = 0; i < productList.size(); i+=2){
+			Product product = mercadoLibre.searchProduct("name", productList.get(i));
+			int quantity = Integer.parseInt(productList.get(i+1));
+			product.setTimesPurchased(quantity);
+
+			try{
+				Product cloneProduct = product.clone();
+				cloneProduct.setQuantityAvailable(quantity);
+				products.add(cloneProduct);
+			}catch(CloneNotSupportedException e){
+				e.getMessage();
+			}
+		}
+		return mercadoLibre.addOrder(new Order(buyerName, generateOrderId(), products));
+	}
+
+	public boolean checkProduct(String productName, int quantity){
+
+		Product product = mercadoLibre.searchProduct("name", productName);
+		if (product == null)
+			return false;
+
+		if (product.getQuantityAvailable() - quantity < 0)
+			return false;
+
+		return true;
 	}
 
 	/**
