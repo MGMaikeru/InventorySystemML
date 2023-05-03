@@ -188,4 +188,7 @@ public class Store {
 		return matches;
 	}
 
+	public ArrayList<Order> getOrders() {
+		return orders;
+	}
 }

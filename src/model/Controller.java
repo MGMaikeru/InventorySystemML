@@ -61,23 +61,23 @@ public class Controller {
 
 		ArrayList<Product> products = new ArrayList<>();
 
-		for (int i = 0; i < productList.size(); i+=2){
+		for (int i = 0; i < productList.size(); i += 2) {
 			Product product = mercadoLibre.searchProduct("name", productList.get(i));
-			int quantity = Integer.parseInt(productList.get(i+1));
+			int quantity = Integer.parseInt(productList.get(i + 1));
 			product.setTimesPurchased(quantity);
 
-			try{
+			try {
 				Product cloneProduct = product.clone();
 				cloneProduct.setQuantityAvailable(quantity);
 				products.add(cloneProduct);
-			}catch(CloneNotSupportedException e){
+			} catch (CloneNotSupportedException e) {
 				e.getMessage();
 			}
 		}
-		return mercadoLibre.addOrder(new Order(buyerName, generateOrderId(), products));
+		return mercadoLibre.addOrder(new Order(buyerName, products));
 	}
 
-	public boolean checkProduct(String productName, int quantity){
+	public boolean checkProduct(String productName, int quantity) {
 
 		Product product = mercadoLibre.searchProduct("name", productName);
 		if (product == null)
@@ -87,16 +87,6 @@ public class Controller {
 			return false;
 
 		return true;
-	}
-
-	/**
-	 * Generates a unique order ID using UUID.
-	 *
-	 * @return A string representation of the generated order ID.
-	 */
-	private String generateOrderId() {
-		UUID uniqueID = UUID.randomUUID();
-		return uniqueID.toString();
 	}
 
 	/**
@@ -249,4 +239,7 @@ public class Controller {
 		return (msg.length() == 0) ? "No matches were found for the criteria provided." : msg.toString();
 	}
 
+	public Store getStore() {
+		return mercadoLibre;
+	}
 }
