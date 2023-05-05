@@ -13,6 +13,7 @@ public class Order {
 	public Order(String buyerName, ArrayList<Product> productList, Calendar date) {
 		this.productList = new ArrayList<>();
 		this.buyerName = buyerName;
+		this.productList = new ArrayList<>();
 		this.productList.addAll(productList);
 		this.date = date;
 		calculateTotalPrice();
