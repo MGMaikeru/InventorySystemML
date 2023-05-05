@@ -22,7 +22,7 @@ public class Main {
 	}
 
 	public void displayStartMenu() {
-		System.out.print("1) \n2)Register new order \n3)Generate ordered entry list \n4)Generate ordered exit list \n5) Exit\nSelected: ");
+		System.out.print("1) \n2)Register new order \n3) \n4) \n5) Exit\nSelected: ");
 		int option = input.nextInt();
 		executeOption(option);
 	}

@@ -16,6 +16,8 @@ public class ControllerTest {
 	private final Product product3 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
 			7, Category.ELECTRONIC, 0);
 
+
+
 	private ArrayList<String> productsAndQuantitiesList;
 
 	public void setupStage1() {
