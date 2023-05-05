@@ -71,7 +71,7 @@ public class SearcherTest {
 	}
 
 	public void setupStage3() {
-		ArrayList<Product> productList1 = new ArrayList<>();
+		ArrayList<Product> productList1 = new ArrayList<Product>();
 		productList1.add(product6);
 		productList1.add(product7);
 		order1 = new Order("Camilo", productList1, Calendar.getInstance());
@@ -147,7 +147,7 @@ public class SearcherTest {
 
 	@Test
 	public void searchOrderTest4() {
-		setupStage2();
+		setupStage3();
 		orderSearcherByNumber.search(orderList, "buyerName", 2500000.0);
 		fail("Exception is throw");
 
