@@ -22,3 +22,8 @@ The objective of the project is to develop an application that allows MercadoLib
 Error-failure density = 0.211<br>
 Reliability = 0.789<br>
 Completeness = 1.9<br>
+
+**Iteration 2:** commit cace3219ee79c530e475e583a87e8bbfa923e1ff <br>
+Error-failure density = 0.3<br>
+Reliability = 0.7<br>
+Completeness = 2.3<br>

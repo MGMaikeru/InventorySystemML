@@ -148,7 +148,7 @@ public class ControllerTest {
 			productsAndQuantitiesList.add("HD laptop");
 			productsAndQuantitiesList.add("2");
 
-			String result = controller.addOrder("", productsAndQuantitiesList);
+			controller.addOrder("Miguel", productsAndQuantitiesList);
 			Assertions.fail("An exception is expected as the product -Miguel in wonderland- exceeds the stock of the product.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. One of the products exceeds the quantity available.", e.getMessage());

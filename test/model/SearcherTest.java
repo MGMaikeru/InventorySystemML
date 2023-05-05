@@ -3,13 +3,10 @@ package model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class SearcherTest {
 
@@ -126,6 +123,12 @@ public class SearcherTest {
 	}
 
 	@Test
+	public void searchProductTest6() {
+		setupStage1();
+		Assertions.assertThrows(ClassCastException.class, () -> searcherByNumber.search(productsList, "name", 100.0));
+	}
+
+	@Test
 	public void searchOrderByNameTest1() {
 		setupStage3();
 		Assertions.assertNull(orderSearcherByString.search(orderList, "buyerName", "Andres"));
@@ -144,7 +147,19 @@ public class SearcherTest {
 	}
 
 	@Test
-	public void searchOrderTest4() {
+	public void searchOrderByNameTest4() {
+		setupStage2();
+		Assertions.assertNull(orderSearcherByNumber.search(orderList, "totalPrice", 100000.0));
+	}
+
+	@Test
+	public void searchOrderTest5() {
+		setupStage3();
+		Assertions.assertThrows(IllegalArgumentException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
+	}
+
+	@Test
+	public void searchOrderTest6() {
 		setupStage3();
 		Assertions.assertThrows(ClassCastException.class, () -> orderSearcherByNumber.search(orderList, "buyerName", 2500000.0));
 	}
