@@ -1,8 +1,10 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.UUID;
-
+import java.util.Calendar;
+import java.util.Date;
 
 public class Controller {
 
@@ -48,45 +50,37 @@ public class Controller {
 	/**
 	 * Adds an order with the given buyer name, order ID, and product list to the MercadoLibre system.
 	 *
-	 * @param buyerName   The name of the buyer.
-	 * @param productList The list of products in the order.
+	 * @param buyerName    The name of the buyer.
+	 * @param productsList The list of products in the order.
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, ArrayList<String> productList) {
+	public String addOrder(String buyerName, ArrayList<String> productsList) {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
-		if (productList.isEmpty())
+		if (productsList.isEmpty())
 			throw new RuntimeException("Error. It is not possible to create an order with an empty product list.");
 
 		ArrayList<Product> products = new ArrayList<>();
 
-		for (int i = 0; i < productList.size(); i += 2) {
-			Product product = mercadoLibre.searchProduct("name", productList.get(i));
-			int quantity = Integer.parseInt(productList.get(i + 1));
-			product.setTimesPurchased(quantity);
-
+		for (int i = 0; i < productsList.size(); i += 2) {
+			Product product = mercadoLibre.searchProduct("name", productsList.get(i));
+			int quantity = Integer.parseInt(productsList.get(i + 1));
+			product.setTimesPurchased(product.getTimesPurchased() + quantity);
 			try {
-				Product cloneProduct = product.clone();
-				cloneProduct.setQuantityAvailable(quantity);
-				products.add(cloneProduct);
+				Product productClone = product.clone();
+				productClone.setQuantityAvailable(quantity);
+				products.add(productClone);
 			} catch (CloneNotSupportedException e) {
 				e.getMessage();
 			}
 		}
-		return mercadoLibre.addOrder(new Order(buyerName, products));
+		return mercadoLibre.addOrder(new Order(buyerName, products, Calendar.getInstance()));
 	}
 
 	public boolean checkProduct(String productName, int quantity) {
-
 		Product product = mercadoLibre.searchProduct("name", productName);
-		if (product == null)
-			return false;
-
-		if (product.getQuantityAvailable() - quantity < 0)
-			return false;
-
-		return true;
+		return product != null && product.getQuantityAvailable() - quantity >= 0;
 	}
 
 	/**
@@ -117,8 +111,12 @@ public class Controller {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
+	 * Searches for a product based on a search variable and value.
+	 *
+	 * @param searchVariable the search variable
+	 * @param value          the value to search for
+	 * @return a string representing the found product
+	 * @throws IllegalStateException if the search variable is unexpected
 	 */
 	public String searchProduct(int searchVariable, double value) throws IllegalStateException {
 		Product product = switch (searchVariable) {
@@ -140,26 +138,67 @@ public class Controller {
 		return printProduct(product);
 	}
 
+	/**
+	 * Prints a product.
+	 *
+	 * @param product the product to print
+	 * @return a string representation of the product
+	 */
 	private String printProduct(Product product) {
-		return (product != null) ? product.toString() : "Not found.";
+		return (product != null) ? product.toString() : "Product not found.";
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
+	 * Searches for an order based on a price.
+	 *
+	 * @param price the price to search for
+	 * @return a string representing the found order
 	 */
-	public String searchOrder(int searchVariable, int value) {
-		// TODO - implement Controller.searchOrder
-		throw new UnsupportedOperationException();
+	public String searchOrder(double price) {
+		Order order = mercadoLibre.searchOrder("totalPrice", price);
+		return printOrder(order);
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
+	 * Searches for an order based on a date and time.
+	 *
+	 * @param dateString the date string in the format "yyyy-MM-dd"
+	 * @param timeString the time string in the format "HH:mm"
+	 * @return a string representing the found order
+	 * @throws ParseException if the date or time string cannot be parsed
 	 */
-	public String searchOrder(int searchVariable, String value) {
-		// TODO - implement Controller.searchOrder
-		throw new UnsupportedOperationException();
+	public String searchOrder(String dateString, String timeString) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = dateFormat.parse(dateString);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		Date time = timeFormat.parse(timeString);
+		calendar.set(Calendar.HOUR_OF_DAY, time.getHours());
+		calendar.set(Calendar.MINUTE, time.getMinutes());
+		Order order = mercadoLibre.searchOrder("date", calendar);
+		return printOrder(order);
+	}
+
+	/**
+	 * Searches for an order based on the buyer name.
+	 *
+	 * @param buyerName the buyer name
+	 * @return a string representing the found order, or "Order not found." if no order was found.
+	 */
+	public String searchOrder(String buyerName) {
+		Order order = mercadoLibre.searchOrder("name", buyerName);
+		return printOrder(order);
+	}
+
+	/**
+	 * Prints an order.
+	 *
+	 * @param order the order to print
+	 * @return a string representation of the order
+	 */
+	private String printOrder(Order order) {
+		return (order != null) ? order.toString() : "Order not found.";
 	}
 
 	/**
@@ -182,9 +221,10 @@ public class Controller {
 			throws IllegalStateException {
 
 		ArrayList<Product> matches = switch (searchVariable) {
-			case 1 -> mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariable(sortVariable));
+			case 1 ->
+					mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			case 2 ->
-					mercadoLibre.searchInRange("timesPurchased", minimum, maximum, senseSort, sortVariable(sortVariable));
+					mercadoLibre.searchInRange("timesPurchased", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
 		};
 		return printProductList(matches);
@@ -204,7 +244,7 @@ public class Controller {
 	 */
 	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort, int sortVariable) {
 		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort,
-				sortVariable(sortVariable));
+				sortVariableForProducts(sortVariable));
 		return printProductList(matches);
 	}
 
@@ -215,12 +255,21 @@ public class Controller {
 	 * @return The string representation of the variable.
 	 * @throws IllegalStateException If an invalid variable code is provided.
 	 */
-	private String sortVariable(int variable) throws IllegalStateException {
+	private String sortVariableForProducts(int variable) throws IllegalStateException {
 		return switch (variable) {
 			case 1 -> "name";
 			case 2 -> "price";
 			case 3 -> "category";
 			case 4 -> "timesPurchased";
+			default -> throw new IllegalStateException("Error. Invalid sort variable.");
+		};
+	}
+
+	private String sortVariableForOrders(int variable) throws IllegalStateException {
+		return switch (variable) {
+			case 1 -> "buyerName";
+			case 2 -> "totalPrice";
+			case 3 -> "date";
 			default -> throw new IllegalStateException("Error. Invalid sort variable.");
 		};
 	}

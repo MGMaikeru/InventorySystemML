@@ -17,7 +17,6 @@ public class ControllerTest {
 			7, Category.ELECTRONIC, 0);
 
 
-
 	private ArrayList<String> productsAndQuantitiesList;
 
 	public void setupStage1() {
@@ -131,7 +130,7 @@ public class ControllerTest {
 			productsAndQuantitiesList.add("HD laptop");
 			productsAndQuantitiesList.add("2");
 
-			String result = controller.addOrder("", productsAndQuantitiesList);
+			controller.addOrder("", productsAndQuantitiesList);
 			Assertions.fail("An exception is expected as the buyer name is empty.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. The name of buyer is empty.", e.getMessage());

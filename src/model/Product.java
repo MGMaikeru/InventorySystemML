@@ -2,15 +2,14 @@ package model;
 
 public class Product implements Cloneable {
 
-	private String name;
-	private String description;
-	private double price;
+	private final String name, description;
+	private final double price;
 	private int quantityAvailable;
-	private Category category;
+	private final Category category;
 	private int timesPurchased;
 
 	public Product(String name, String description, double price, int quantityAvailable, Category category,
-			int timesPurchased) {
+				   int timesPurchased) {
 		this.name = name;
 		this.description = description;
 		this.price = price;
@@ -23,24 +22,12 @@ public class Product implements Cloneable {
 		return this.name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public double getPrice() {
 		return this.price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	public int getQuantityAvailable() {
@@ -53,10 +40,6 @@ public class Product implements Cloneable {
 
 	public Category getCategory() {
 		return this.category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 
 	public int getTimesPurchased() {

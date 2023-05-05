@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -71,18 +70,18 @@ public class SearcherTest {
 		orderSearcherByNumber = new Searcher<>();
 	}
 
-	public void setupStage3(){
+	public void setupStage3() {
 		ArrayList<Product> productList1 = new ArrayList<>();
 		productList1.add(product6);
 		productList1.add(product7);
-		order1 = new Order("Camilo", productList1);
+		order1 = new Order("Camilo", productList1, Calendar.getInstance());
 		ArrayList<Product> productList2 = new ArrayList<Product>();
 		productList2.add(product5);
-		order2 = new Order("Esteban", productList2);
+		order2 = new Order("Esteban", productList2, Calendar.getInstance());
 		ArrayList<Product> productList3 = new ArrayList<Product>();
 		productList3.add(product4);
 		productList3.add(product8);
-		order3 = new Order("Sara", productList3);
+		order3 = new Order("Sara", productList3, Calendar.getInstance());
 		orderList = new ArrayList<>();
 		orderList.add(order1);
 		orderList.add(order2);
@@ -95,46 +94,46 @@ public class SearcherTest {
 	@Test
 	public void searchProductByNameTest1() {
 		setupStage1();
-		Product product = searcherByString.binarySearch(productsList, "name", "Harry Potter and the sorcerer's stone");
+		Product product = searcherByString.search(productsList, "name", "Harry Potter and the sorcerer's stone");
 		Assertions.assertNull(product);
 	}
 
 	@Test
 	public void searchProductByPriceTest2() {
 		setupStage1();
-		Product product = searcherByNumber.binarySearch(productsList, "price", 300000.0);
+		Product product = searcherByNumber.search(productsList, "price", 300000.0);
 		Assertions.assertEquals(product3, product);
 	}
 
 	@Test
 	public void searchProductByCategoryTest3() {
 		setupStage1();
-		Product product = searcherByCategory.binarySearch(productsList, "category", Category.ELECTRONIC);
+		Product product = searcherByCategory.search(productsList, "category", Category.ELECTRONIC);
 		Assertions.assertEquals(product1, product);
 	}
 
 	@Test
 	public void searchProductTest4() {
 		setupStage2();
-		Assertions.assertNull(searcherByString.binarySearch(productsList, "name", "Cboc"));
+		Assertions.assertNull(searcherByString.search(productsList, "name", "Cboc"));
 	}
 
 	@Test
 	public void searchProductTest5() {
 		setupStage1();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> searcherByNumber.binarySearch(productsList, "pricess", 100.0));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> searcherByNumber.search(productsList, "pricess", 100.0));
 	}
 
 	@Test
 	public void searchOrderByNameTest1() {
 		setupStage3();
-		Assertions.assertNull(orderSearcherByString.binarySearch(orderList, "buyerName", "Andres"));
+		Assertions.assertNull(orderSearcherByString.search(orderList, "buyerName", "Andres"));
 	}
 
 	@Test
 	public void searchOrderByPriceTest2() {
 		setupStage3();
-		Assertions.assertEquals(order2, orderSearcherByNumber.binarySearch(orderList, "totalPrice", 2500000.0));
+		Assertions.assertEquals(order2, orderSearcherByNumber.search(orderList, "totalPrice", 2500000.0));
 	}
 
 	@Test
@@ -143,13 +142,13 @@ public class SearcherTest {
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String dateString = dateFormat.format(calendar.getTime());
-		assertEquals(order2, orderSearcherByString.binarySearch(orderList, "date", dateString));
+		assertEquals(order2, orderSearcherByString.search(orderList, "date", dateString));
 	}
 
 	@Test
 	public void searchOrderTest4() {
 		setupStage2();
-		orderSearcherByNumber.binarySearch(orderList, "buyerName", 2500000.0);
+		orderSearcherByNumber.search(orderList, "buyerName", 2500000.0);
 		fail("Exception is throw");
 
 	}
@@ -157,8 +156,7 @@ public class SearcherTest {
 	@Test
 	public void searchOrderTest5() {
 		setupStage3();
-		orderSearcherByNumber.binarySearch(orderList, "buyerName", 2500000.0);
+		orderSearcherByNumber.search(orderList, "buyerName", 2500000.0);
 		fail("Exception is throw");
-
 	}
 }

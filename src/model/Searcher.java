@@ -4,18 +4,20 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Searcher<T, K extends Comparable<K>> {
-	public T binarySearch(ArrayList<T> list, String searchVariable, K attributeValue) {
-		return binarySearch(list, searchVariable, attributeValue, 0, list.size() - 1);
+	public T search(ArrayList<T> list, String searchVariable, K attributeValue) {
+		int index = binarySearch(list, searchVariable, attributeValue, 0, list.size() - 1);
+		T element = index == -1 ? null : list.get(index);
+		return element != null && compareValues(element, searchVariable, attributeValue) == 0 ? element : null;
 	}
 
-	private T binarySearch(ArrayList<T> list, String searchVariable, K attributeValue, int left, int right) {
-		if (left > right) {
-			return null;
-		}
+	private int binarySearch(ArrayList<T> list, String searchVariable, K attributeValue, int left, int right) {
+		if (list.isEmpty()) return -1;
+		if (left > right) return right;
+
 		int mid = (right + left) / 2;
 		T element = list.get(mid);
 		if (compareValues(element, searchVariable, attributeValue) == 0)
-			return element;
+			return mid;
 		if (compareValues(element, searchVariable, attributeValue) < 0) {
 			left = mid + 1;
 		} else {
@@ -40,15 +42,10 @@ public class Searcher<T, K extends Comparable<K>> {
 		}
 	}
 
-	public ArrayList<T> filterRange(ArrayList<T> list, String searchVariable, K min, K max) {
-		ArrayList<T> elementsInRange = new ArrayList<>();
-		for (T element : list) {
-			K value = getAttributeValue(element, searchVariable);
-			if (value.compareTo(min) >= 0 && value.compareTo(max) <= 0) {
-				elementsInRange.add(element);
-			}
-		}
-		return elementsInRange;
+	public ArrayList<T> filterList(ArrayList<T> list, String searchVariable, K min, K max) {
+		int indexMin = binarySearch(list, searchVariable, min, 0, list.size() - 1);
+		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
+		return indexMin != -1 && indexMax != -1 ? (ArrayList<T>) list.subList(indexMin, indexMax) : new ArrayList<>();
 	}
 
 }

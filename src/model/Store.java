@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -9,18 +10,26 @@ public class Store {
 
 	private final ArrayList<Order> orders;
 
-	private final Searcher<Product, String> searcherByString;
-	private final Searcher<Product, Double> searcherByDouble;
-	private final Searcher<Product, Integer> searcherByInteger;
-	private final Searcher<Product, Category> searcherByCategory;
+	private final Searcher<Product, String> searcherProductsByString;
+	private final Searcher<Product, Double> searcherProductsByDouble;
+	private final Searcher<Product, Integer> searcherProductsByInteger;
+	private final Searcher<Product, Category> searcherProductsByCategory;
+	private final Searcher<Order, String> searcherOrdersByString;
+
+	private final Searcher<Order, Double> searcherOrdersByDouble;
+	private final Searcher<Order, Calendar> searcherOrdersByDate;
+
 
 	public Store() {
 		products = new ArrayList<Product>();
 		orders = new ArrayList<>();
-		searcherByString = new Searcher<>();
-		searcherByDouble = new Searcher<>();
-		searcherByInteger = new Searcher<>();
-		searcherByCategory = new Searcher<>();
+		searcherProductsByString = new Searcher<>();
+		searcherProductsByDouble = new Searcher<>();
+		searcherProductsByInteger = new Searcher<>();
+		searcherProductsByCategory = new Searcher<>();
+		searcherOrdersByString = new Searcher<>();
+		searcherOrdersByDouble = new Searcher<>();
+		searcherOrdersByDate = new Searcher<>();
 	}
 
 	/**
@@ -61,7 +70,7 @@ public class Store {
 	 */
 	public Product searchProduct(String searchVariable, String value) {
 		sortProductsByName(products);
-		return searcherByString.binarySearch(products, searchVariable, value);
+		return searcherProductsByString.search(products, searchVariable, value);
 	}
 
 	/**
@@ -74,11 +83,11 @@ public class Store {
 		switch (searchVariable) {
 			case "price" -> {
 				sortProductsByPrice(products);
-				product = searcherByDouble.binarySearch(products, searchVariable, value);
+				product = searcherProductsByDouble.search(products, searchVariable, value);
 			}
 			case "timesPurchased" -> {
 				sortProductsByTimesPurchased(products);
-				product = searcherByInteger.binarySearch(products, searchVariable, (int) value);
+				product = searcherProductsByInteger.search(products, searchVariable, (int) value);
 			}
 		}
 		return product;
@@ -91,7 +100,48 @@ public class Store {
 	 */
 	public Product searchProduct(String searchVariable, Category value) {
 		sortProductsByCategory(products);
-		return searcherByCategory.binarySearch(products, searchVariable, value);
+		return searcherProductsByCategory.search(products, searchVariable, value);
+	}
+
+	/**
+	 * @param searchVariable
+	 * @param buyerName
+	 * @return
+	 */
+	public Order searchOrder(String searchVariable, String buyerName) {
+		sortOrderBy(searchVariable);
+		return searcherOrdersByString.search(orders, searchVariable, buyerName);
+	}
+
+	/**
+	 * @param searchVariable
+	 * @param buyerName
+	 * @return
+	 */
+	public Order searchOrder(String searchVariable, Calendar date) {
+		sortOrderBy(searchVariable);
+		return searcherOrdersByDate.search(orders, searchVariable, date);
+	}
+
+	/**
+	 * @param searchVariable
+	 * @param price
+	 * @return
+	 */
+	public Order searchOrder(String searchVariable, double price) {
+		sortOrderBy(searchVariable);
+		return searcherOrdersByDouble.search(orders, searchVariable, price);
+	}
+
+	public void sortOrderBy(String searchVariable) {
+		orders.sort(
+				switch (searchVariable) {
+					case "buyerName" -> Comparator.comparing(Order::getBuyerName);
+					case "totalPrice" -> Comparator.comparing(Order::getTotalPrice);
+					case "date" -> Comparator.comparing(Order::getDate);
+					default -> throw new IllegalStateException("");
+				}
+		);
 	}
 
 	/**
@@ -107,8 +157,9 @@ public class Store {
 	public ArrayList<Product> searchInRange(String searchVariable, double min, double max, int senseSort, String sortVariable) {
 		sortProductsByTimesPurchased(products);
 		ArrayList<Product> matches = switch (searchVariable) {
-			case "price" -> searcherByDouble.filterRange(products, searchVariable, min, max);
-			case "timesPurchased" -> searcherByInteger.filterRange(products, searchVariable, (int) min, (int) max);
+			case "price" -> searcherProductsByDouble.filterList(products, searchVariable, min, max);
+			case "timesPurchased" ->
+					searcherProductsByInteger.filterList(products, searchVariable, (int) min, (int) max);
 			default -> throw new IllegalStateException("Invalid search variable: " + searchVariable);
 		};
 		return sortProducts(matches, senseSort, sortVariable);
@@ -126,7 +177,7 @@ public class Store {
 	 */
 	public ArrayList<Product> searchInInterval(String variable, String startPrefix, String finalPrefix, int senseSort, String sortVariable) {
 		sortProductsByName(products);
-		ArrayList<Product> matches = searcherByString.filterRange(products, variable, startPrefix, finalPrefix);
+		ArrayList<Product> matches = searcherProductsByString.filterList(products, variable, startPrefix, finalPrefix);
 		return sortProducts(matches, senseSort, sortVariable);
 	}
 
@@ -188,7 +239,4 @@ public class Store {
 		return matches;
 	}
 
-	public ArrayList<Order> getOrders() {
-		return orders;
-	}
 }
