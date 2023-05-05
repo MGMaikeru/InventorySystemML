@@ -11,10 +11,10 @@ public class Order {
 	private ArrayList<Product> productList;
 
 	public Order(String buyerName, ArrayList<Product> productList, Calendar date) {
+		this.productList = new ArrayList<>();
 		this.buyerName = buyerName;
 		this.productList.addAll(productList);
 		this.date = date;
-		this.productList = new ArrayList<>();
 		calculateTotalPrice();
 	}
 

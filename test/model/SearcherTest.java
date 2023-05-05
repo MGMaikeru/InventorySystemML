@@ -51,7 +51,8 @@ public class SearcherTest {
 	private ArrayList<Order> orderList;
 	private Searcher<Order, String> orderSearcherByString;
 	private Searcher<Order, Double> orderSearcherByNumber;
-	private Searcher<Order, Calendar> orderSearcherByCalendar;
+	private Searcher<Order, Calendar> orderSearcherByDate;
+	private final Calendar date = Calendar.getInstance();
 
 	public void setupStage1() {
 		productsList = new ArrayList<>();
@@ -75,10 +76,10 @@ public class SearcherTest {
 		productList1.add(product6);
 		productList1.add(product7);
 		order1 = new Order("Camilo", productList1, Calendar.getInstance());
-		ArrayList<Product> productList2 = new ArrayList<Product>();
+		ArrayList<Product> productList2 = new ArrayList<>();
 		productList2.add(product5);
-		order2 = new Order("Esteban", productList2, Calendar.getInstance());
-		ArrayList<Product> productList3 = new ArrayList<Product>();
+		order2 = new Order("Esteban", productList2, date);
+		ArrayList<Product> productList3 = new ArrayList<>();
 		productList3.add(product4);
 		productList3.add(product8);
 		order3 = new Order("Sara", productList3, Calendar.getInstance());
@@ -88,7 +89,7 @@ public class SearcherTest {
 		orderList.add(order3);
 		orderSearcherByString = new Searcher<>();
 		orderSearcherByNumber = new Searcher<>();
-		orderSearcherByCalendar = new Searcher<>();
+		orderSearcherByDate = new Searcher<>();
 	}
 
 	@Test
@@ -137,26 +138,15 @@ public class SearcherTest {
 	}
 
 	@Test
-	public void searchOrderByDate3() throws ParseException {
+	public void searchOrderByDate3() {
 		setupStage3();
-		Calendar calendar = Calendar.getInstance();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String dateString = dateFormat.format(calendar.getTime());
-		assertEquals(order2, orderSearcherByString.search(orderList, "date", dateString));
+		assertEquals(order2, orderSearcherByDate.search(orderList, "date", date));
 	}
 
 	@Test
 	public void searchOrderTest4() {
-		setupStage2();
-		orderSearcherByNumber.search(orderList, "buyerName", 2500000.0);
-		fail("Exception is throw");
-
-	}
-
-	@Test
-	public void searchOrderTest5() {
 		setupStage3();
-		orderSearcherByNumber.search(orderList, "buyerName", 2500000.0);
-		fail("Exception is throw");
+		Assertions.assertThrows(ClassCastException.class, () -> orderSearcherByNumber.search(orderList, "buyerName", 2500000.0));
 	}
+
 }

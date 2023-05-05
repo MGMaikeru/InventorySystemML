@@ -114,8 +114,9 @@ public class Store {
 	}
 
 	/**
+	 *
 	 * @param searchVariable
-	 * @param buyerName
+	 * @param date
 	 * @return
 	 */
 	public Order searchOrder(String searchVariable, Calendar date) {
@@ -124,9 +125,11 @@ public class Store {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param price
-	 * @return
+	 * Searches for an order based on a search variable and price.
+	 *
+	 * @param searchVariable the search variable
+	 * @param price          the price to search for
+	 * @return the found order
 	 */
 	public Order searchOrder(String searchVariable, double price) {
 		sortOrderBy(searchVariable);
