@@ -3,6 +3,8 @@ package model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -74,10 +76,10 @@ public class SearcherTest {
 		productList1.add(product6);
 		productList1.add(product7);
 		order1 = new Order("Camilo", productList1, Calendar.getInstance());
-		ArrayList<Product> productList2 = new ArrayList<>();
+		ArrayList<Product> productList2 = new ArrayList<Product>();
 		productList2.add(product5);
-		order2 = new Order("Esteban", productList2, date);
-		ArrayList<Product> productList3 = new ArrayList<>();
+		order2 = new Order("Esteban", productList2, Calendar.getInstance());
+		ArrayList<Product> productList3 = new ArrayList<Product>();
 		productList3.add(product4);
 		productList3.add(product8);
 		order3 = new Order("Sara", productList3, Calendar.getInstance());
