@@ -44,11 +44,11 @@ public class Searcher<T, K extends Comparable<K>> {
 	}
 
 	public ArrayList<T> filterList(ArrayList<T> list, String searchVariable, K min, K max) {
+		if (list == null) throw new RuntimeException("Error. The list must be initialized to search for matches.");
+		if (min.compareTo(max) > 0) throw new RuntimeException("Error. The minimum search criteria cannot be greater than the maximum.");
 		int indexMin = binarySearch(list, searchVariable, min, 0, list.size() - 1);
 		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
 		ArrayList<T> listCropped = new ArrayList<>();
-		if (indexMax < indexMin)
-			throw new RuntimeException("Error. The minimum search criteria cannot be greater than the maximum.");
 		if (indexMin != -1 && indexMax != -1)
 			for (int i = indexMin; i < indexMax; i++)
 				listCropped.add(list.get(i));

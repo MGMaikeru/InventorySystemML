@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class ControllerTest {
 
 	private Controller controller;
-	private ArrayList<Product> products;
 	private final Product product1 = new Product("Miguel in wonderland", "An unexpected adventure awaits Miguel in" +
 			" wonderland. Join him on his journey.", 100000, 7, Category.BOOKS, 0);
 	private final Product product2 = new Product("Cboc Two", "An incredible video game console.", 2000000,
@@ -25,10 +24,6 @@ public class ControllerTest {
 
 	public void setupStage2() {
 		controller = new Controller();
-		products = new ArrayList<>();
-		products.add(product1);
-		products.add(product2);
-		products.add(product3);
 		Store store = controller.getStore();
 		store.addProduct(product1);
 		store.addProduct(product2);
@@ -147,7 +142,6 @@ public class ControllerTest {
 			productsAndQuantitiesList.add("5");
 			productsAndQuantitiesList.add("HD laptop");
 			productsAndQuantitiesList.add("2");
-
 			controller.addOrder("Miguel", productsAndQuantitiesList);
 			Assertions.fail("An exception is expected as the product -Miguel in wonderland- exceeds the stock of the product.");
 		} catch (RuntimeException e) {

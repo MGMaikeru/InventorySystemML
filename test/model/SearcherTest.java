@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
-import static org.junit.Assert.assertEquals;
-
 public class SearcherTest {
 
-	private final Product product1 = new Product("Cboc Two", "An incredible video game console.",
-			120000.0, 2, Category.ELECTRONIC, 6);
+	private final Product product1 = new Product("Cboc Two", "An incredible video game console.", 120000.0, 2, Category.ELECTRONIC, 6);
 	private final Product product2 = new Product("Ball", "Soccer ball", 200000.0, 7,
 			Category.SPORTS, 4);
 	private final Product product3 = new Product("Miguel in Wonderland", "An unexpected adventure awaits Miguel in wonderland. Join him on his journey.",
@@ -24,13 +21,13 @@ public class SearcherTest {
 	private final Product product5 = new Product("play state 3", "Video game console with advanced graphics.", 2500000.0,
 			1, Category.ELECTRONIC, 0);
 
-	private final Product product6 = new Product("wood chair", "Comfortable chair made of solid wood.", 100000,
+	private final Product product6 = new Product("wood chair", "Comfortable chair made of solid wood.", 100000.0,
 			8, Category.BEAUTY, 0);
 
-	private final Product product7 = new Product("wood table", "Sturdy table made of high-quality wood.", 250000,
+	private final Product product7 = new Product("wood table", "Sturdy table made of high-quality wood.", 250000.0,
 			3, Category.BEAUTY, 0);
 
-	private final Product product8 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
+	private final Product product8 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000.0,
 			2, Category.ELECTRONIC, 0);
 
 	private Order order2;
@@ -127,7 +124,7 @@ public class SearcherTest {
 	@Test
 	public void searchProductTest6() {
 		setupStage1();
-			Assertions.assertThrows(ClassCastException.class, () -> productSearcherByNumber.search(productsList, "name", 100.0));
+		Assertions.assertThrows(ClassCastException.class, () -> productSearcherByNumber.search(productsList, "name", 100.0));
 	}
 
 	@Test
@@ -157,7 +154,7 @@ public class SearcherTest {
 	@Test
 	public void searchOrderTest5() {
 		setupStage3();
-			Assertions.assertThrows(IllegalArgumentException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
 	}
 
 	@Test
@@ -166,29 +163,41 @@ public class SearcherTest {
 		Assertions.assertThrows(ClassCastException.class, () -> orderSearcherByNumber.search(orderList, "buyerName", 2500000.0));
 	}
 
-    @Test
-    public void searchByRange1(){
-        setupStage1();
-        assert (productSearcherByNumber.filterList(productsList, "price", 0.0, 2000.0).isEmpty());
-    }
-
 	@Test
-	public void searchByRange2(){
+	public void searchByRange1() {
 		setupStage1();
-		assertEquals(productsList, productSearcherByNumber.filterList(productsList, "price", 0.0, 5000000.0));
+		assert productSearcherByNumber.filterList(productsList, "price", 0.0, 2000.0).isEmpty();
 	}
 
 	@Test
-	public void searchByRange3(){
+	public void searchByRange2() {
 		setupStage1();
-		ArrayList<Product> nullList = new ArrayList<>();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByNumber.filterList(nullList, "timesPurchased", 0.0, 10.0));
+		Assertions.assertEquals(productsList, productSearcherByNumber.filterList(productsList, "price", 0.0, 5000000.0));
 	}
 
 	@Test
-	public void searchByRange4(){
+	public void searchByRange3() {
 		setupStage1();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByNumber.filterList(productsList, "price", 10.0, 0.0));
+		productsList.sort(Comparator.comparing(Product::getPrice));
+		ArrayList<Product> matches = productSearcherByNumber.filterList(productsList, "price", 200000.0, 300000.0);
+		Assertions.assertEquals(3, matches.size());
+		Assertions.assertEquals(product2, matches.get(0));
+		Assertions.assertEquals(product7, matches.get(1));
+		Assertions.assertEquals(product3, matches.get(2));
+
+	}
+
+	@Test
+	public void searchByRange4() {
+		setupStage1();
+		Assertions.assertThrows(RuntimeException.class, () -> productSearcherByNumber.filterList(null, "timesPurchased", 0.0, 10.0));
+	}
+
+	@Test
+	public void searchByRange5() {
+		setupStage1();
+		productsList.sort(Comparator.comparing(Product::getPrice));
+		Assertions.assertThrows(RuntimeException.class, () -> productSearcherByNumber.filterList(productsList, "price", 100000.0, 0.0));
 	}
 
 	@Test
@@ -201,18 +210,18 @@ public class SearcherTest {
 	public void searchProductByInterval2() {
 		setupStage1();
 		ArrayList<Product> matches = productSearcherByString.filterList(productsList, "name", "C", "H");
-		Assertions.assertEquals(product1, matches.get(0));
 		Assertions.assertEquals(1, matches.size());
+		Assertions.assertEquals(product1, matches.get(0));
 	}
 
 	@Test
 	public void searchProductByInterval3() {
 		setupStage1();
 		ArrayList<Product> matches = productSearcherByString.filterList(productsList, "name", "C", "P");
+		Assertions.assertEquals(3, matches.size());
 		Assertions.assertEquals(product1, matches.get(0));
 		Assertions.assertEquals(product8, matches.get(1));
 		Assertions.assertEquals(product3, matches.get(2));
-		Assertions.assertEquals(3, matches.size());
 	}
 
 	@Test
