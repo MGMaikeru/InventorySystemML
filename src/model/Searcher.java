@@ -32,20 +32,23 @@ public class Searcher<T, K extends Comparable<K>> {
 	}
 
 	private K getAttributeValue(T element, String searchVariable) {
+		K value = null;
 		try {
 			Field field = element.getClass().getDeclaredField(searchVariable);
 			field.setAccessible(true);
-			Object value = field.get(element);
-			return (K) value;
+			value = (K) field.get(element);
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-			throw new IllegalArgumentException("Invalid attribute name or incompatible types", e);
+			e.printStackTrace();
 		}
+		return value;
 	}
 
 	public ArrayList<T> filterList(ArrayList<T> list, String searchVariable, K min, K max) {
 		int indexMin = binarySearch(list, searchVariable, min, 0, list.size() - 1);
 		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
-		return indexMin != -1 && indexMax != -1 ? (ArrayList<T>) list.subList(indexMin, indexMax) : new ArrayList<>();
+		ArrayList<T> listCropped = new ArrayList<>();
+		for (int i = indexMin; i <= indexMax; i++) listCropped.add(list.get(i));
+		return listCropped;
 	}
 
 }
