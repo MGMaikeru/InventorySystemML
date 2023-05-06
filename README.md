@@ -37,3 +37,8 @@ Completeness = 3<br>
 Error-failure density = 0.43<br>
 Reliability = 0.57<br>
 Completeness = 3.4<br>
+
+**Iteration 5:** commit c614e42f32b3d976412c353a860efb27e033fa14<br>
+Error-failure density = 0.43<br>
+Reliability = 0.57<br>
+Completeness = 3.8<br>
