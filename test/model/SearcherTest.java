@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,9 +31,6 @@ public class SearcherTest {
 
 	private final Product product8 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
 			2, Category.ELECTRONIC, 0);
-
-	private final Product product9 = new Product("gamer headphones", "High-quality headphones with immersive sound.",
-			100.0, 15, Category.ELECTRONIC, 0);
 
 	private Order order1;
 
@@ -156,7 +152,7 @@ public class SearcherTest {
 	@Test
 	public void searchOrderTest5() {
 		setupStage3();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
+			Assertions.assertThrows(NoSuchFieldException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
 	}
 
 	@Test

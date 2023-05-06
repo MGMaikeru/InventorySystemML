@@ -165,7 +165,7 @@ public class Store {
 					searcherProductsByInteger.filterList(products, searchVariable, (int) min, (int) max);
 			default -> throw new IllegalStateException("Invalid search variable: " + searchVariable);
 		};
-		return sortProducts(matches, senseSort, sortVariable);
+		return sortSearchResults(matches, senseSort, sortVariable);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class Store {
 	public ArrayList<Product> searchInInterval(String variable, String startPrefix, String finalPrefix, int senseSort, String sortVariable) {
 		sortProductsByName(products);
 		ArrayList<Product> matches = searcherProductsByString.filterList(products, variable, startPrefix, finalPrefix);
-		return sortProducts(matches, senseSort, sortVariable);
+		return sortSearchResults(matches, senseSort, sortVariable);
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class Store {
 	 * @return The sorted list of products.
 	 * @throws RuntimeException If an invalid sense of ordering is provided.
 	 */
-	private ArrayList<Product> sortProducts(ArrayList<Product> matches, int senseSort, String sortVariable) throws RuntimeException {
+	public ArrayList<Product> sortSearchResults(ArrayList<Product> matches, int senseSort, String sortVariable) throws RuntimeException {
 		switch (sortVariable) {
 			case "name" -> sortProductsByName(matches);
 			case "price" -> sortProductsByPrice(matches);
