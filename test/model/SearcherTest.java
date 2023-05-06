@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static org.junit.Assert.assertEquals;
+import java.util.Comparator;
 
 public class SearcherTest {
 
@@ -32,11 +31,7 @@ public class SearcherTest {
 	private final Product product8 = new Product("HD laptop", "Intel Core, 2 Ram, 500GB HDD", 1200000,
 			2, Category.ELECTRONIC, 0);
 
-	private Order order1;
-
 	private Order order2;
-
-	private Order order3;
 
 	private ArrayList<Product> productsList;
 	private Searcher<Product, String> productSearcherByString;
@@ -56,6 +51,7 @@ public class SearcherTest {
 		productsList.add(product1);
 		productsList.add(product2);
 		productsList.add(product3);
+		productsList.sort(Comparator.comparing(Product::getName));
 	}
 
 	public void setupStage2() {
@@ -69,14 +65,14 @@ public class SearcherTest {
 		ArrayList<Product> productList1 = new ArrayList<>();
 		productList1.add(product6);
 		productList1.add(product7);
-		order1 = new Order("Camilo", productList1, Calendar.getInstance());
+		Order order1 = new Order("Camilo", productList1, Calendar.getInstance());
 		ArrayList<Product> productList2 = new ArrayList<>();
 		productList2.add(product5);
 		order2 = new Order("Esteban", productList2, date);
 		ArrayList<Product> productList3 = new ArrayList<>();
 		productList3.add(product4);
 		productList3.add(product8);
-		order3 = new Order("Sara", productList3, Calendar.getInstance());
+		Order order3 = new Order("Sara", productList3, Calendar.getInstance());
 		orderList = new ArrayList<>();
 		orderList.add(order1);
 		orderList.add(order2);
@@ -96,6 +92,7 @@ public class SearcherTest {
 	@Test
 	public void searchProductByPriceTest2() {
 		setupStage1();
+		productsList.sort(Comparator.comparing(Product::getPrice));
 		Product product = productSearcherByNumber.search(productsList, "price", 300000.0);
 		Assertions.assertEquals(product3, product);
 	}
@@ -103,6 +100,7 @@ public class SearcherTest {
 	@Test
 	public void searchProductByCategoryTest3() {
 		setupStage1();
+		productsList.sort(Comparator.comparing(Product::getCategory));
 		Product product = searcherByCategory.search(productsList, "category", Category.ELECTRONIC);
 		Assertions.assertEquals(product1, product);
 	}
@@ -122,7 +120,7 @@ public class SearcherTest {
 	@Test
 	public void searchProductTest6() {
 		setupStage1();
-		Assertions.assertThrows(ClassCastException.class, () -> productSearcherByNumber.search(productsList, "name", 100.0));
+			Assertions.assertThrows(ClassCastException.class, () -> productSearcherByNumber.search(productsList, "name", 100.0));
 	}
 
 	@Test
@@ -140,7 +138,7 @@ public class SearcherTest {
 	@Test
 	public void searchOrderByDate3() {
 		setupStage3();
-		assertEquals(order2, orderSearcherByDate.search(orderList, "date", date));
+		Assertions.assertEquals(order2, orderSearcherByDate.search(orderList, "date", date));
 	}
 
 	@Test
@@ -152,7 +150,7 @@ public class SearcherTest {
 	@Test
 	public void searchOrderTest5() {
 		setupStage3();
-			Assertions.assertThrows(NoSuchFieldException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
+			Assertions.assertThrows(IllegalArgumentException.class, () -> orderSearcherByString.search(orderList, "buyer’sName", "Sara"));
 	}
 
 	@Test

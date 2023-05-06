@@ -31,14 +31,14 @@ public class Searcher<T, K extends Comparable<K>> {
 		return value.compareTo(attributeValue);
 	}
 
-	private K getAttributeValue(T element, String searchVariable) {
+	private K getAttributeValue(T element, String searchVariable) throws IllegalArgumentException {
 		K value = null;
 		try {
 			Field field = element.getClass().getDeclaredField(searchVariable);
 			field.setAccessible(true);
 			value = (K) field.get(element);
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("Invalid comparison variable.");
 		}
 		return value;
 	}
@@ -47,7 +47,9 @@ public class Searcher<T, K extends Comparable<K>> {
 		int indexMin = binarySearch(list, searchVariable, min, 0, list.size() - 1);
 		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
 		ArrayList<T> listCropped = new ArrayList<>();
-		for (int i = indexMin; i <= indexMax; i++) listCropped.add(list.get(i));
+		if (indexMin != -1 && indexMax != -1)
+			for (int i = indexMin; i <= indexMax; i++)
+				listCropped.add(list.get(i));
 		return listCropped;
 	}
 
