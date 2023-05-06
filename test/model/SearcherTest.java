@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
+import static org.junit.Assert.assertEquals;
+
 public class SearcherTest {
 
 	private final Product product1 = new Product("Cboc Two", "An incredible video game console.",
@@ -162,6 +164,31 @@ public class SearcherTest {
 	public void searchOrderTest6() {
 		setupStage3();
 		Assertions.assertThrows(ClassCastException.class, () -> orderSearcherByNumber.search(orderList, "buyerName", 2500000.0));
+	}
+
+    @Test
+    public void searchByRange1(){
+        setupStage1();
+        assert (productSearcherByNumber.filterList(productsList, "price", 0.0, 2000.0).isEmpty());
+    }
+
+	@Test
+	public void searchByRange2(){
+		setupStage1();
+		assertEquals(productsList, productSearcherByNumber.filterList(productsList, "price", 0.0, 5000000.0));
+	}
+
+	@Test
+	public void searchByRange3(){
+		setupStage1();
+		ArrayList<Product> nullList = new ArrayList<>();
+		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByNumber.filterList(nullList, "timesPurchased", 0.0, 10.0));
+	}
+
+	@Test
+	public void searchByRange4(){
+		setupStage1();
+		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByNumber.filterList(productsList, "price", 10.0, 0.0));
 	}
 
 	@Test
