@@ -12,7 +12,7 @@ public class Searcher<T, K extends Comparable<K>> {
 
 	private int binarySearch(ArrayList<T> list, String searchVariable, K attributeValue, int left, int right) {
 		if (list.isEmpty()) return -1;
-		if (left > right) return right;
+		if (left > right) return right + 1;
 
 		int mid = (right + left) / 2;
 		T element = list.get(mid);
@@ -32,7 +32,7 @@ public class Searcher<T, K extends Comparable<K>> {
 	}
 
 	private K getAttributeValue(T element, String searchVariable) throws IllegalArgumentException {
-		K value = null;
+		K value;
 		try {
 			Field field = element.getClass().getDeclaredField(searchVariable);
 			field.setAccessible(true);
@@ -47,8 +47,10 @@ public class Searcher<T, K extends Comparable<K>> {
 		int indexMin = binarySearch(list, searchVariable, min, 0, list.size() - 1);
 		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
 		ArrayList<T> listCropped = new ArrayList<>();
+		if (indexMax < indexMin)
+			throw new RuntimeException("Error. The minimum search criteria cannot be greater than the maximum.");
 		if (indexMin != -1 && indexMax != -1)
-			for (int i = indexMin; i <= indexMax; i++)
+			for (int i = indexMin; i < indexMax; i++)
 				listCropped.add(list.get(i));
 		return listCropped;
 	}

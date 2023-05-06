@@ -51,6 +51,11 @@ public class SearcherTest {
 		productsList.add(product1);
 		productsList.add(product2);
 		productsList.add(product3);
+		productsList.add(product4);
+		productsList.add(product5);
+		productsList.add(product6);
+		productsList.add(product7);
+		productsList.add(product8);
 		productsList.sort(Comparator.comparing(Product::getName));
 	}
 
@@ -102,7 +107,7 @@ public class SearcherTest {
 		setupStage1();
 		productsList.sort(Comparator.comparing(Product::getCategory));
 		Product product = searcherByCategory.search(productsList, "category", Category.ELECTRONIC);
-		Assertions.assertEquals(product1, product);
+		Assertions.assertEquals(product4, product);
 	}
 
 	@Test
@@ -162,7 +167,7 @@ public class SearcherTest {
 	@Test
 	public void searchProductByInterval1() {
 		setupStage1();
-		assert productSearcherByString.filterList(productsList, "name", "Aa", "Bb").isEmpty();
+		assert productSearcherByString.filterList(productsList, "name", "Aa", "Au").isEmpty();
 	}
 
 	@Test
@@ -170,19 +175,29 @@ public class SearcherTest {
 		setupStage1();
 		ArrayList<Product> matches = productSearcherByString.filterList(productsList, "name", "C", "H");
 		Assertions.assertEquals(product1, matches.get(0));
-		Assertions.assertEquals(product2, matches.get(1));
+		Assertions.assertEquals(1, matches.size());
 	}
 
 	@Test
 	public void searchProductByInterval3() {
 		setupStage1();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByString.filterList(productsList, "name", "Zz", "Aa"));
+		ArrayList<Product> matches = productSearcherByString.filterList(productsList, "name", "C", "P");
+		Assertions.assertEquals(product1, matches.get(0));
+		Assertions.assertEquals(product8, matches.get(1));
+		Assertions.assertEquals(product3, matches.get(2));
+		Assertions.assertEquals(3, matches.size());
 	}
 
 	@Test
 	public void searchProductByInterval4() {
 		setupStage1();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> productSearcherByString.filterList(productsList, "name", "Bb", "Aa"));
+		Assertions.assertThrows(RuntimeException.class, () -> productSearcherByString.filterList(productsList, "name", "Zz", "Aa"));
+	}
+
+	@Test
+	public void searchProductByInterval5() {
+		setupStage1();
+		Assertions.assertThrows(RuntimeException.class, () -> productSearcherByString.filterList(productsList, "name", "Bb", "Aa"));
 	}
 
 }

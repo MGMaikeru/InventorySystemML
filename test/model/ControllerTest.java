@@ -169,21 +169,21 @@ public class ControllerTest {
 
 	@Test
 	public void increaseQuantityTest1() {
-		setupStage1();
+		setupStage2();
 		controller.increaseQuantity("HD laptop", 3);
 		assert 10 == product3.getQuantityAvailable();
 	}
 
 	@Test
 	public void increaseQuantityTest2() {
-		setupStage1();
+		setupStage2();
 		controller.increaseQuantity("HD laptop", 0);
 		assert 7 == product3.getQuantityAvailable();
 	}
 
 	@Test
 	public void increaseQuantityTest3() {
-		setupStage1();
+		setupStage2();
 		try {
 			controller.increaseQuantity("HP laptop", -2);
 			Assertions.fail("An exception is expected because the increase amount is negative.");
