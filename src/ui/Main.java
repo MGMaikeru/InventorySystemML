@@ -1,5 +1,4 @@
 package ui;
-
 import model.Controller;
 
 import java.util.ArrayList;
@@ -247,8 +246,8 @@ public class Main {
 		if (input.hasNextInt()) {
 			return input.nextInt();
 		} else {
-			System.out.print("Invalid input! try again: ");
-			input.nextLine();
+			System.out.println("Invalid input! try again: ");
+			input.next();
 			return isInteger(input);
 		}
 	}
@@ -257,8 +256,8 @@ public class Main {
 		if (input.hasNextDouble()) {
 			return input.nextDouble();
 		} else {
-			System.out.print("Invalid input! try again: ");
-			input.nextLine();
+			System.out.println("Invalid input! try again: ");
+			input.next();
 			return isDouble(input);
 		}
 	}
