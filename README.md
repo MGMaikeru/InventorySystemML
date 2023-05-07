@@ -3,10 +3,14 @@
 # InventorySystemML
 
 ### **Project developers** ✒️
+
 Esteban Gaviria Zambrano | Miguel Gonzalez Arango | Yeison Rodriguez Zuluaga
 
-### **Program objective** 
-The objective of the project is to develop an application that allows MercadoLibre to sell online from its virtual store. This will allow to enter the inventory of the virtual store and allow the search and removal of products. In addition, the program will allow to register the orders placed by the users of the store.
+### **Program objective**
+
+The objective of the project is to develop an application that allows MercadoLibre to sell online from its virtual
+store. This will allow to enter the inventory of the virtual store and allow the search and removal of products. In
+addition, the program will allow to register the orders placed by the users of the store.
 
 ### **Build With** 🛠️
 
@@ -18,6 +22,7 @@ The objective of the project is to develop an application that allows MercadoLib
 </div>
 
 ### **Quality indicators**
+
 **Iteration 1:** commit 28a422a6090dae36d26415e51c71187889910340<br>
 Error-failure density = 0.211<br>
 Reliability = 0.789<br>
@@ -47,3 +52,8 @@ Completeness = 3.8<br>
 Error-failure density = 0.125<br>
 Reliability = 0.875<br>
 Completeness = 4<br>
+
+**Iteration 7:** commit ecc21f73309329aff8efe646301aaa6ab9113f97<br>
+Error-failure density = 0.11<br>
+Reliability = 0.89<br>
+Completeness = 4.2<br>
