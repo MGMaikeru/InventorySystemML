@@ -52,28 +52,20 @@ public class Main {
 	}
 
 	public void registerProduct() {
-		System.out.print("Type product name: ");
+		System.out.print("Type the product name: ");
 		input.nextLine();
 		String productName = input.nextLine();
-		System.out.println("Type product description: ");
+		System.out.println("Type the product description: ");
 		String description = input.nextLine();
-		System.out.print("Type product price (if the price is not integer use ',' for the decimals): ");
+		System.out.print("Type the product price (if the price is not integer use ',' for the decimals): ");
 		double price = isDouble(input);
 		System.out.print("Type the available quantity: ");
 		int availableQuantity = isInteger(input);
-		System.out.print("""
-				Choose a category:
-				 1) Books
-				 2) Electronic
-				 3) Apparel and accessories
-				 4) Foods and beverages
-				 5) Stationary
-				 6) Sports
-				 7) Beauty
-				 8) Toys
-				Selected:\s""");
+		printCategoryOptions();
 		int productCategory = isInteger(input);
-		System.out.println(controller.addProduct(productName, description, price, availableQuantity, productCategory, 0));
+		System.out.println("Number of times purchased: ");
+		int timesPurchased = isInteger(input);
+		System.out.println(controller.addProduct(productName, description, price, availableQuantity, productCategory, timesPurchased));
 	}
 
 	public void registerOrder() {
@@ -100,7 +92,18 @@ public class Main {
 				if (selected != 'Y' && selected != 'N') System.out.println("Type a valid letter.");
 			} while (selected != 'Y' && selected != 'N');
 		}
-		System.out.println(controller.addOrder(buyerName, products));
+		int priceForm, totalPrice = 0;
+		do {
+			System.out.print("Do you want to enter the total price of the order (1) or delegate the responsibility to the system (2)?: ");
+			priceForm = isInteger(input);
+			if (priceForm == 1) {
+				System.out.print("Enter the total price of the order: ");
+				totalPrice = isInteger(input);
+			}
+			input.nextLine();
+			if (priceForm != 1 && priceForm != 2) System.out.println("Error. Type a valid option.");
+		} while (priceForm != 1 && priceForm != 2);
+		System.out.println(priceForm == 1 ? controller.addOrder(buyerName, products, totalPrice) : controller.addOrder(buyerName, products, -1));
 	}
 
 	public void increaseProductQuantity() {
@@ -124,6 +127,7 @@ public class Main {
 			case 1 -> System.out.println(searchSpecificProduct());
 			case 2 -> System.out.println(searchByRange());
 			case 3 -> System.out.println(searchByInterval());
+			default -> throw new RuntimeException("Error. Invalid search selection.");
 		}
 	}
 
@@ -131,42 +135,32 @@ public class Main {
 		System.out.print("""
 				Choose a option:
 				1) Search by product name
-				2) Search by times purchased
-				3) Search by product price
+				2) Search by product price
+				3) Search by times purchased
 				4) Search by product category
 				Select:\s""");
 		int option = isInteger(input);
 		switch (option) {
 			case 1 -> {
-				System.out.println("Type product name to search: ");
+				System.out.print("Type product name to search: ");
 				input.nextLine();
 				String productName = input.nextLine();
 				return controller.searchProduct(productName);
 			}
 			case 2 -> {
-				System.out.println("Type times purchased to search: ");
-				double timesPurchased = isInteger(input);
-				return controller.searchProduct(2, timesPurchased);
-			}
-			case 3 -> {
-				System.out.println("Type product price to search: ");
+				System.out.print("Type product price to search: ");
 				double productPrice = isDouble(input);
 				return controller.searchProduct(1, productPrice);
 			}
+			case 3 -> {
+				System.out.print("Type times purchased to search: ");
+				int timesPurchased = isInteger(input);
+				return controller.searchProduct(2, timesPurchased);
+			}
 			case 4 -> {
-				System.out.print("""
-						Choose a category:
-						 1) Books
-						 2) Electronic
-						 3) Apparel and accessories
-						 4) Foods and beverages
-						 5) Stationary
-						 6) Sports
-						 7) Beauty
-						 8) Toys
-						Selected:\s""");
+				printCategoryOptions();
 				int option2 = isInteger(input);
-				return controller.searchProduct(option2);
+				return controller.searchProduct(3, option2);
 			}
 			default -> {
 				return "Invalid option!";
@@ -175,73 +169,98 @@ public class Main {
 	}
 
 	public String searchByRange() {
-		System.out.print("""
-				Choose a option:\s
-				1) Search by product price\s
-				2) Search by purchased times\s
-				3) Search by available quantity \s
-				Select:\s""");
-		int option = isInteger(input);
+		int option;
+		do {
+			System.out.print("""
+					Choose a option:
+					1) Search by product price
+					2) Search by purchased times
+					3) Search by available quantity
+					Select:\s""");
+			option = isInteger(input);
+			if (option != 1 && option != 2 && option != 3) System.out.println("Error. Type a valid option.");
+		} while (option != 1 && option != 2 && option != 3);
 		System.out.print("Type the minimum value: ");
 		double minValue = isDouble(input);
 		System.out.print("Type the maximum value: ");
 		double maxValue = isDouble(input);
-		System.out.print("""
-				Choose order sort:\s
-				1) Descending order\s
-				2) Ascending order
-				Option:\s""");
+		printSortOptions();
 		int orderOption = isInteger(input);
 		return switch (option) {
 			case 1 -> controller.searchInRange(1, minValue, maxValue, orderOption, 2);
 			case 2 -> controller.searchInRange(2, minValue, maxValue, orderOption, 4);
 			case 3 -> controller.searchInRange(3, minValue, maxValue, orderOption, 5);
-			default -> "Invalid option!";
+			default -> "Error. Invalid option!";
 		};
 	}
 
 	public String searchByInterval() {
-		System.out.println("Type the start prefix: ");
+		System.out.print("Type the start prefix: ");
 		input.nextLine();
 		String startPrefix = input.nextLine();
-		System.out.println("Type the final prefix: ");
+		System.out.print("Type the final prefix: ");
 		String finalPrefix = input.nextLine();
-		System.out.println("""
-				Choose order sort:\s
-				1) Descending order\s
-				2) Ascending order
-				Option:\s""");
+		printSortOptions();
 		int orderOption = isInteger(input);
 		return controller.searchInInterval(startPrefix, finalPrefix, orderOption);
 	}
 
 	public String searchOrder() {
-		System.out.println("\nChoose a option to search: \n1)Search by buyer's name \n2)Search by total price \n3)Search by date \nSelect: ");
-		int option = isInteger(input);
+		int option;
+		do {
+			System.out.print("""
+					Choose a option to search:
+					1) Search by buyer's name
+					2) Search by total price
+					3) Search by date
+					Select:\s""");
+			option = isInteger(input);
+			if (option != 1 && option != 2 && option != 3) System.out.println("Error. Type a valid option.");
+		} while (option != 1 && option != 2 && option != 3);
 		switch (option) {
 			case 1 -> {
-				System.out.println("Type order buyer's name to search: ");
+				System.out.print("Type the order buyer's name to search: ");
 				input.nextLine();
 				String buyerName = input.nextLine();
 				return controller.searchOrder(1, buyerName);
 			}
 			case 2 -> {
-				System.out.println("Type order total price: ");
+				System.out.print("Type the order total price: ");
 				double totalPrice = isDouble(input);
 				return controller.searchOrder(totalPrice);
 			}
 			case 3 -> {
-				System.out.println("Type order date (yyyy-MM-dd): ");
+				System.out.print("Type the order date (in format 'yyyy-MM-dd HH:mm:ss'): ");
 				input.nextLine();
 				String date = input.nextLine();
-				System.out.println("Type order hour (HH:mm): ");
-				String hour = input.nextLine();
-				return controller.searchOrder(2, date + " " + hour);
+				return controller.searchOrder(2, date);
 			}
 			default -> {
 				return "Invalid option!";
 			}
 		}
+	}
+
+	public void printCategoryOptions() {
+		System.out.print("""
+				Choose a category:
+				 1) Books
+				 2) Electronic
+				 3) Apparel and accessories
+				 4) Foods and beverages
+				 5) Stationary
+				 6) Sports
+				 7) Beauty
+				 8) Toys
+				Selected:\s""");
+	}
+
+	public void printSortOptions() {
+		System.out.print("""
+				Choose order sort:
+				1) Ascending order
+				2) Descending order
+				Option:\s""");
 	}
 
 	public void closeProgram() {

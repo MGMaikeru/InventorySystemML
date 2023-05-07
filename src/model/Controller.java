@@ -25,10 +25,15 @@ public class Controller {
 	 */
 	public String addProduct(String productName, String description, double price, int quantity, int cate,
 							 int timesPurchased) throws RuntimeException {
+		if (mercadoLibre.searchProduct("name", productName) != null) {
+			return "The product was already in stock!\n" + increaseQuantity(productName, quantity);
+		}
 		if (productName.isEmpty())
 			throw new RuntimeException("Error. The name of the product is empty.");
 		if (quantity < 0)
 			throw new RuntimeException("Error. The quantity of product in inventory cannot be negative.");
+		if (timesPurchased < 0)
+			throw new RuntimeException("Error. The times purchased cannot be negative.");
 		Category category = switch (cate) {
 			case 1 -> Category.BOOKS;
 			case 2 -> Category.ELECTRONIC;
@@ -51,7 +56,7 @@ public class Controller {
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, ArrayList<String> productsList) throws RuntimeException {
+	public String addOrder(String buyerName, ArrayList<String> productsList, double totalPrice) throws RuntimeException {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
 		if (productsList.isEmpty())
@@ -75,7 +80,13 @@ public class Controller {
 				e.printStackTrace();
 			}
 		}
-		return mercadoLibre.addOrder(new Order(buyerName, products, Calendar.getInstance()));
+		Order order;
+		if (totalPrice != -1) {
+			if (totalPrice < 0)
+				throw new RuntimeException("Error. The total price of the order cannot be negative.");
+			order = new Order(buyerName, products, Calendar.getInstance(), totalPrice);
+		} else order = new Order(buyerName, products, Calendar.getInstance());
+		return mercadoLibre.addOrder(order);
 	}
 
 	/**
@@ -129,28 +140,18 @@ public class Controller {
 		Product product = switch (searchVariable) {
 			case 1 -> mercadoLibre.searchProduct("price", value);
 			case 2 -> mercadoLibre.searchProduct("timesPurchased", value);
+			case 3 -> switch ((int) value) {
+				case 1 -> mercadoLibre.searchProduct("category", Category.BOOKS);
+				case 2 -> mercadoLibre.searchProduct("category", Category.ELECTRONIC);
+				case 3 -> mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
+				case 4 -> mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
+				case 5 -> mercadoLibre.searchProduct("category", Category.STATIONARY);
+				case 6 -> mercadoLibre.searchProduct("category", Category.SPORTS);
+				case 7 -> mercadoLibre.searchProduct("category", Category.BEAUTY);
+				case 8 -> mercadoLibre.searchProduct("category", Category.TOYS);
+				default -> throw new RuntimeException("Error. Invalid category.");
+			};
 			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
-		};
-		return printProduct(product);
-	}
-
-	/**
-	 * Searches for a product with the given category value and returns its details.
-	 *
-	 * @param value The category value to search for.
-	 * @return A string representation of the product's details.
-	 */
-	public String searchProduct(int value) throws RuntimeException {
-		Product product = switch (value) {
-			case 1 -> mercadoLibre.searchProduct("category", Category.BOOKS);
-			case 2 -> mercadoLibre.searchProduct("category", Category.ELECTRONIC);
-			case 3 -> mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
-			case 4 -> mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
-			case 5 -> mercadoLibre.searchProduct("category", Category.STATIONARY);
-			case 6 -> mercadoLibre.searchProduct("category", Category.SPORTS);
-			case 7 -> mercadoLibre.searchProduct("category", Category.BEAUTY);
-			case 8 -> mercadoLibre.searchProduct("category", Category.TOYS);
-			default -> throw new RuntimeException("Error. Invalid category.");
 		};
 		return printProduct(product);
 	}

@@ -1,15 +1,8 @@
 [
   {
     "buyerName": "Miguel",
+    "date": "2023-05-07 18:09:41",
     "totalPrice": 2240000.0,
-    "date": {
-      "year": 2023,
-      "month": 4,
-      "dayOfMonth": 7,
-      "hourOfDay": 12,
-      "minute": 45,
-      "second": 12
-    },
     "productList": [
       {
         "name": "Cboc Two",

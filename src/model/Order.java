@@ -10,6 +10,15 @@ public class Order {
 	private double totalPrice;
 	private final ArrayList<Product> productList;
 
+	public Order(String buyerName, ArrayList<Product> productList, Calendar date, double totalPrice) {
+		this.buyerName = buyerName;
+		this.productList = new ArrayList<>();
+		this.productList.addAll(productList);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.date = dateFormat.format(date.getTime());
+		this.totalPrice = totalPrice;
+	}
+
 	public Order(String buyerName, ArrayList<Product> productList, Calendar date) {
 		this.buyerName = buyerName;
 		this.productList = new ArrayList<>();

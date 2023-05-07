@@ -68,11 +68,11 @@ public class Store {
 	 */
 	public String increaseQuantity(String productName, int newQuantity) {
 		Product product = searchProduct("name", productName);
-		String msg = "Product not found";
+		String msg = "Product not found!";
 		if (product != null) {
 			int before = product.getQuantityAvailable();
 			product.setQuantityAvailable(before + newQuantity);
-			msg = "Quantity of the product " + product.getName() + " modified from " + before + " to " + product.getQuantityAvailable();
+			msg = "Quantity of the product " + product.getName() + " modified from " + before + " to " + product.getQuantityAvailable() + "!";
 		}
 		return msg;
 	}
