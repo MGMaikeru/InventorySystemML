@@ -22,8 +22,8 @@ public class Main {
 
 	public void displayStartMenu() {
 		System.out.print("1)Register product \n2)Register new order \n3)Increase quantity of registered product \n4)Search product " +
-				"\n5)Search order \n8)Exit \nSelected: ");
-		int option = input.nextInt();
+				"\n5)Search order \n6)Exit \nSelected: ");
+		int option = isInteger(input);
 		executeOption(option);
 	}
 
@@ -62,13 +62,13 @@ public class Main {
 		String productName = input.nextLine();
 		System.out.println("Type product description: ");
 		String description = input.nextLine();
-		System.out.println("Type product price: ");
-		double price = input.nextDouble();
+		System.out.println("Type product price (if the price is not integer, use , for the decimals): ");
+		double price = isDouble(input);
 		System.out.println("Type available quantity: ");
-		int availableQuantity = input.nextInt();
+		int availableQuantity = isInteger(input);
 		System.out.println("Choose a category:\n 1)Books\n 2)Electronic\n 3)Apparel and accessories\n 4)Foods and beverages" +
 				"\n 5)Stationary\n 6)Sports\n 7)Beauty\n 8)Toys \nSelected: ");
-		int productCategory = input.nextInt();
+		int productCategory = isInteger(input);
 
 		System.out.println(controller.addProduct(productName, description, price, availableQuantity, productCategory, 0));
 	}
@@ -83,7 +83,7 @@ public class Main {
 			System.out.println("Type product: ");
 			String productName = input.nextLine();
 			System.out.println("Type quantity: ");
-			int productQuantity = input.nextInt();
+			int productQuantity = isInteger(input);
 			if(!controller.checkProduct(productName, productQuantity))
 				System.out.println("Product doesn't exist or product out of stock!");
 			else
@@ -101,13 +101,13 @@ public class Main {
 		input.nextLine();
 		String productName = input.nextLine();
 		System.out.println("Type the amount to increase: ");
-		int increaseAmount = input.nextInt();
+		int increaseAmount = isInteger(input);
 		System.out.println(controller.increaseQuantity(productName, increaseAmount));
 	}
 
 	public void searchProduct(){
 		System.out.println("Choose a option: \n1)Search a specific product \n2)Search by range \n3)Search by interval \nSelect: ");
-		int option = input.nextInt();
+		int option = isInteger(input);
 		switch (option){
 			case 1 -> System.out.println(searchSpecificProduct());
 			case 2 -> System.out.println(searchByRange());
@@ -117,7 +117,7 @@ public class Main {
 
 	public String searchSpecificProduct(){
 		System.out.println("\nChoose a option: \n1)Search by product name \n2)Search by times purchased \n3)Search by product price  \n4)Search by product category \nSelect: ");
-		int option = input.nextInt();
+		int option = isInteger(input);
 		switch (option) {
 			case 1 -> {
 				System.out.println("Type product name to search: ");
@@ -127,18 +127,18 @@ public class Main {
 			}
 			case 2 -> {
 				System.out.println("Type times purchased to search: ");
-				double timesPurchased = input.nextDouble();
+				double timesPurchased = isInteger(input);
 				return controller.searchProduct(2, timesPurchased);
 			}
 			case 3 -> {
 				System.out.println("Type product price to search: ");
-				double productPrice = input.nextDouble();
+				double productPrice = isDouble(input);
 				return controller.searchProduct(1, productPrice);
 			}
 			case 4 -> {
 				System.out.println("Choose a category:\n 1)Books\n 2)Electronic\n 3)Apparel and accessories\n 4)Foods and beverages" +
 						"\n 5)Stationary\n 6)Sports\n 7)Beauty\n 8)Toys \nSelected: ");
-				int option2 = input.nextInt();
+				int option2 = isInteger(input);
 				return controller.searchProduct(option2);
 			}
 			default -> {
@@ -149,13 +149,13 @@ public class Main {
 
 	public String searchByRange(){
 		System.out.println("\nChoose a option: \n1)Search by product price \n2)Search by purchased times \n3)Search by available quantity  \nSelect: ");
-		int option = input.nextInt();
+		int option = isInteger(input);
 		System.out.println("Type the minimum value: ");
-		double minValue = input.nextDouble();
+		double minValue = isDouble(input);
 		System.out.println("Type the maximum value: ");
-		double maxValue = input.nextDouble();
+		double maxValue = isDouble(input);
 		System.out.println("Choose order sort: 1)Descending order 2)Ascending order");
-		int orderOption = input.nextInt();
+		int orderOption = isInteger(input);
 		return switch (option){
 			case 1 -> controller.searchInRange(1, minValue, maxValue, orderOption, 2);
 			case 2 -> controller.searchInRange(2, minValue, maxValue, orderOption, 4);
@@ -171,13 +171,13 @@ public class Main {
 		System.out.println("Type the final prefix: ");
 		String finalPrefix = input.nextLine();
 		System.out.println("Choose order sort: 1)Descending order 2)Ascending order");
-		int orderOption = input.nextInt();
+		int orderOption = isInteger(input);
 		return controller.searchInInterval(startPrefix, finalPrefix, orderOption);
 	}
 
 	public String searchOrder(){
 		System.out.println("\nChoose a option to search: \n1)Search by buyer's name \n2)Search by total price \n3)Search by date \nSelect: ");
-		int option = input.nextInt();
+		int option = isInteger(input);
 		switch (option) {
 			case 1 -> {
 				System.out.println("Type order buyer's name to search: ");
@@ -187,7 +187,7 @@ public class Main {
 			}
 			case 2 -> {
 				System.out.println("Type order total price: ");
-				double totalPrice = input.nextDouble();
+				double totalPrice = isDouble(input);
 				return controller.searchOrder(totalPrice);
 			}
 			case 3 -> {
@@ -207,5 +207,25 @@ public class Main {
 			}
 		}
 		return null;
+	}
+
+	public static Integer isInteger(Scanner input) {
+		if (input.hasNextInt()) {
+			return input.nextInt();
+		} else {
+			System.out.println("Invalid input! try again:");
+			input.nextLine();
+			return isInteger(input);
+		}
+	}
+
+	public static Double isDouble(Scanner input) {
+		if (input.hasNextDouble()) {
+			return input.nextDouble();
+		} else {
+			System.out.println("Invalid input! try again:");
+			input.nextLine();
+			return isDouble(input);
+		}
 	}
 }
