@@ -45,7 +45,7 @@ public class Store {
 	 */
 	public String addOrder(Order order) {
 		orders.add(order);
-		return "Order added!";
+		return "Order added!" + order.getTotalPrice() + order.getDate().toString();
 	}
 
 	/**

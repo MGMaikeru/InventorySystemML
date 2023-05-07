@@ -133,8 +133,20 @@ public class Controller {
 	 * @param value The category value to search for.
 	 * @return A string representation of the product's details.
 	 */
-	public String searchProduct(Category value) {
-		Product product = mercadoLibre.searchProduct("category", value);
+	public String searchProduct(int value) {
+		Product product = null;
+		switch (value) {
+			case 1 -> product = mercadoLibre.searchProduct("category", Category.BOOKS);
+			case 2 -> product = mercadoLibre.searchProduct("category", Category.ELECTRONIC);
+			case 3 -> product = mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
+			case 4 -> product = mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
+			case 5 -> product = mercadoLibre.searchProduct("category", Category.STATIONARY);
+			case 6 -> product = mercadoLibre.searchProduct("category", Category.SPORTS);
+			case 7 -> product = mercadoLibre.searchProduct("category", Category.BEAUTY);
+			case 8 -> product = mercadoLibre.searchProduct("category", Category.TOYS);
+			default -> throw new RuntimeException("Error. Invalid category.");
+		}
+
 		return printProduct(product);
 	}
 
@@ -187,7 +199,7 @@ public class Controller {
 	 * @return a string representing the found order, or "Order not found." if no order was found.
 	 */
 	public String searchOrder(String buyerName) {
-		Order order = mercadoLibre.searchOrder("name", buyerName);
+		Order order = mercadoLibre.searchOrder("buyerName", buyerName);
 		return printOrder(order);
 	}
 
@@ -225,6 +237,8 @@ public class Controller {
 					mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			case 2 ->
 					mercadoLibre.searchInRange("timesPurchased", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
+			case 3 ->
+					mercadoLibre.searchInRange("quantityAvailable", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
 		};
 		return printProductList(matches);
@@ -237,14 +251,12 @@ public class Controller {
 	 * @param startPrefix  The prefix indicating the start of the interval.
 	 * @param finalPrefix  The prefix indicating the end of the interval.
 	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
-	 * @param sortVariable The variable to be used for sorting (e.g., "name",
-	 *                     "price").
 	 * @return The String with the sorted list of products within the specified
 	 * interval.
 	 */
-	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort, int sortVariable) {
+	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort) {
 		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort,
-				sortVariableForProducts(sortVariable));
+				sortVariableForProducts(1));
 		return printProductList(matches);
 	}
 
@@ -261,6 +273,7 @@ public class Controller {
 			case 2 -> "price";
 			case 3 -> "category";
 			case 4 -> "timesPurchased";
+			case 5 -> "quantityAvailable";
 			default -> throw new IllegalStateException("Error. Invalid sort variable.");
 		};
 	}
