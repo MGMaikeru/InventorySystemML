@@ -214,7 +214,7 @@ public class Main {
 			return input.nextInt();
 		} else {
 			System.out.println("Invalid input! try again:");
-			input.nextLine();
+			input.next();
 			return isInteger(input);
 		}
 	}
@@ -224,7 +224,7 @@ public class Main {
 			return input.nextDouble();
 		} else {
 			System.out.println("Invalid input! try again:");
-			input.nextLine();
+			input.next();
 			return isDouble(input);
 		}
 	}
