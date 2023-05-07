@@ -35,4 +35,14 @@ public class Order {
 	public double getTotalPrice() {
 		return totalPrice;
 	}
+
+	@Override
+	public String toString() {
+		return "Order{" +
+				"buyerName='" + buyerName + '\'' +
+				", date='" + date + '\'' +
+				", totalPrice=" + totalPrice +
+				", productList=" + productList +
+				'}';
+	}
 }
