@@ -10,18 +10,21 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Writer {
+	private final String PROJECT_PATH = System.getProperty("user.dir") + "\\data";
+
 	public void save(ArrayList<Product> products, ArrayList<Order> orders) {
 		try {
-			saveProducts(products);
-			saveOrders(orders);
+			String RELATIVE_PATH = "\\systemData";
+			saveProducts(RELATIVE_PATH + "\\products.json", products);
+			saveOrders(RELATIVE_PATH + "\\orders.json", orders);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void saveProducts(ArrayList<Product> products) throws IOException {
+	public void saveProducts(String relativePath, ArrayList<Product> products) throws IOException {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + "\\data\\products.json")) {
+		try (FileWriter writer = new FileWriter(PROJECT_PATH + relativePath)) {
 			// Serialize the productList to JSON and write to the file
 			gson.toJson(products, writer);
 		} catch (JsonIOException | IOException e) {
@@ -29,9 +32,9 @@ public class Writer {
 		}
 	}
 
-	private void saveOrders(ArrayList<Order> orders) throws IOException {
+	public void saveOrders(String relativePath, ArrayList<Order> orders) throws IOException {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		try (FileWriter writer = new FileWriter(System.getProperty("user.dir") + "\\data\\orders.json")) {
+		try (FileWriter writer = new FileWriter(PROJECT_PATH + relativePath)) {
 			gson.toJson(orders, writer);
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();

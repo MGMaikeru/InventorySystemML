@@ -13,12 +13,11 @@ public class Reader {
 	public void readGson(ArrayList<Product> products, ArrayList<Order> orders) {
 		Gson gson = new Gson();
 		File projectDir = new File(System.getProperty("user.dir"));
-		File dataDirectory = new File(projectDir + "\\data");
+		File dataDirectory = new File(projectDir + "\\data\\systemData");
 		File productsInformation = new File(dataDirectory + "\\products.json");
 		File ordersInformation = new File(dataDirectory + "\\orders.json");
-
-		if (!dataDirectory.exists()) dataDirectory.mkdir();
 		try {
+			if (!dataDirectory.exists()) dataDirectory.mkdir();
 			if (!productsInformation.exists()) productsInformation.createNewFile();
 			if (!ordersInformation.exists()) ordersInformation.createNewFile();
 
