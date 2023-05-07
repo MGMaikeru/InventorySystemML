@@ -2,7 +2,6 @@ package ui;
 
 import model.Controller;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,7 +44,7 @@ public class Main {
 				case 6 -> closeProgram();
 				default -> System.out.println("Error. Type a valid option.\n");
 			}
-		} catch (RuntimeException | ParseException e) {
+		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		if (option != 6) displayStartMenu();
@@ -210,7 +209,7 @@ public class Main {
 		return controller.searchInInterval(startPrefix, finalPrefix, orderOption);
 	}
 
-	public String searchOrder() throws ParseException {
+	public String searchOrder() {
 		System.out.println("\nChoose a option to search: \n1)Search by buyer's name \n2)Search by total price \n3)Search by date \nSelect: ");
 		int option = isInteger(input);
 		switch (option) {
@@ -218,7 +217,7 @@ public class Main {
 				System.out.println("Type order buyer's name to search: ");
 				input.nextLine();
 				String buyerName = input.nextLine();
-				return controller.searchOrder(buyerName);
+				return controller.searchOrder(1, buyerName);
 			}
 			case 2 -> {
 				System.out.println("Type order total price: ");
@@ -231,7 +230,7 @@ public class Main {
 				String date = input.nextLine();
 				System.out.println("Type order hour (HH:mm): ");
 				String hour = input.nextLine();
-				return controller.searchOrder(date, hour);
+				return controller.searchOrder(2, date + " " + hour);
 			}
 			default -> {
 				return "Invalid option!";

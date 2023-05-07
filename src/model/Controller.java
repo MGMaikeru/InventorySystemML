@@ -1,10 +1,7 @@
 package model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Controller {
 
@@ -81,6 +78,13 @@ public class Controller {
 		return mercadoLibre.addOrder(new Order(buyerName, products, Calendar.getInstance()));
 	}
 
+	/**
+	 * Checks if a product with the given name and quantity is available in the MercadoLibre system.
+	 *
+	 * @param productName The name of the product to check.
+	 * @param quantity    The desired quantity of the product.
+	 * @return true if the product is available in the desired quantity, false otherwise.
+	 */
 	public boolean checkProduct(String productName, int quantity) {
 		Product product = mercadoLibre.searchProduct("name", productName);
 		return product != null && product.getQuantityAvailable() - quantity >= 0;
@@ -136,20 +140,18 @@ public class Controller {
 	 * @param value The category value to search for.
 	 * @return A string representation of the product's details.
 	 */
-	public String searchProduct(int value) {
-		Product product = null;
-		switch (value) {
-			case 1 -> product = mercadoLibre.searchProduct("category", Category.BOOKS);
-			case 2 -> product = mercadoLibre.searchProduct("category", Category.ELECTRONIC);
-			case 3 -> product = mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
-			case 4 -> product = mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
-			case 5 -> product = mercadoLibre.searchProduct("category", Category.STATIONARY);
-			case 6 -> product = mercadoLibre.searchProduct("category", Category.SPORTS);
-			case 7 -> product = mercadoLibre.searchProduct("category", Category.BEAUTY);
-			case 8 -> product = mercadoLibre.searchProduct("category", Category.TOYS);
+	public String searchProduct(int value) throws RuntimeException {
+		Product product = switch (value) {
+			case 1 -> mercadoLibre.searchProduct("category", Category.BOOKS);
+			case 2 -> mercadoLibre.searchProduct("category", Category.ELECTRONIC);
+			case 3 -> mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
+			case 4 -> mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
+			case 5 -> mercadoLibre.searchProduct("category", Category.STATIONARY);
+			case 6 -> mercadoLibre.searchProduct("category", Category.SPORTS);
+			case 7 -> mercadoLibre.searchProduct("category", Category.BEAUTY);
+			case 8 -> mercadoLibre.searchProduct("category", Category.TOYS);
 			default -> throw new RuntimeException("Error. Invalid category.");
-		}
-
+		};
 		return printProduct(product);
 	}
 
@@ -175,34 +177,18 @@ public class Controller {
 	}
 
 	/**
-	 * Searches for an order based on a date and time.
+	 * Searches for an order based on a search variable and value.
 	 *
-	 * @param dateString the date string in the format "yyyy-MM-dd"
-	 * @param timeString the time string in the format "HH:mm"
-	 * @return a string representing the found order
-	 * @throws ParseException if the date or time string cannot be parsed
+	 * @param searchVariable the search variable
+	 * @param value          the value to search for
+	 * @return a string representation of the found order
 	 */
-	public String searchOrder(String dateString, String timeString) throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = dateFormat.parse(dateString);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		Date time = timeFormat.parse(timeString);
-		calendar.set(Calendar.HOUR_OF_DAY, time.getHours());
-		calendar.set(Calendar.MINUTE, time.getMinutes());
-		Order order = mercadoLibre.searchOrder("date", calendar);
-		return printOrder(order);
-	}
-
-	/**
-	 * Searches for an order based on the buyer name.
-	 *
-	 * @param buyerName the buyer name
-	 * @return a string representing the found order, or "Order not found." if no order was found.
-	 */
-	public String searchOrder(String buyerName) {
-		Order order = mercadoLibre.searchOrder("buyerName", buyerName);
+	public String searchOrder(int searchVariable, String value) {
+		Order order = switch (searchVariable) {
+			case 1 -> mercadoLibre.searchOrder("buyerName", value);
+			case 2 -> mercadoLibre.searchOrder("date", value);
+			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
+		};
 		return printOrder(order);
 	}
 

@@ -4,10 +4,8 @@ import persistence.Reader;
 import persistence.Writer;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.text.SimpleDateFormat;
 
 public class Store {
 	private final ArrayList<Product> products;
@@ -23,7 +21,6 @@ public class Store {
 	private final Searcher<Order, String> searcherOrdersByString;
 
 	private final Searcher<Order, Double> searcherOrdersByDouble;
-	private final Searcher<Order, Calendar> searcherOrdersByDate;
 
 
 	public Store() {
@@ -38,7 +35,6 @@ public class Store {
 		searcherProductsByCategory = new Searcher<>();
 		searcherOrdersByString = new Searcher<>();
 		searcherOrdersByDouble = new Searcher<>();
-		searcherOrdersByDate = new Searcher<>();
 	}
 
 	/**
@@ -60,8 +56,7 @@ public class Store {
 	 */
 	public String addOrder(Order order) {
 		orders.add(order);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "Order added!\nTotal price: " + order.getTotalPrice() + "\nPurchase date: " + dateFormat.format(order.getDate().getTime());
+		return "Order added!\nTotal price: " + order.getTotalPrice() + "\nPurchase date: " + order.getDate();
 	}
 
 	/**
@@ -132,24 +127,12 @@ public class Store {
 	 * Searches for an order based on a search variable and buyer name.
 	 *
 	 * @param searchVariable the search variable
-	 * @param buyerName      the buyer name to search for
+	 * @param value          the value to search for
 	 * @return the found order
 	 */
-	public Order searchOrder(String searchVariable, String buyerName) {
+	public Order searchOrder(String searchVariable, String value) {
 		sortOrderBy(searchVariable);
-		return searcherOrdersByString.search(orders, searchVariable, buyerName);
-	}
-
-	/**
-	 * Searches for an order based on a search variable and Calendar date.
-	 *
-	 * @param searchVariable the search variable
-	 * @param date           the Calendar date to search for
-	 * @return the found order
-	 */
-	public Order searchOrder(String searchVariable, Calendar date) {
-		sortOrderBy(searchVariable);
-		return searcherOrdersByDate.search(orders, searchVariable, date);
+		return searcherOrdersByString.search(orders, searchVariable, value);
 	}
 
 	/**
