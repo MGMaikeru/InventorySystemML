@@ -54,7 +54,7 @@ public class Controller {
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, ArrayList<String> productsList) {
+	public String addOrder(String buyerName, ArrayList<String> productsList) throws RuntimeException {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
 		if (productsList.isEmpty())
@@ -66,6 +66,10 @@ public class Controller {
 			Product product = mercadoLibre.searchProduct("name", productsList.get(i));
 			int quantity = Integer.parseInt(productsList.get(i + 1));
 			product.setTimesPurchased(product.getTimesPurchased() + quantity);
+			int newQuantity = product.getQuantityAvailable() - quantity;
+			if (newQuantity < 0)
+				throw new RuntimeException("Error. One of the products exceeds the quantity available.");
+			product.setQuantityAvailable(newQuantity);
 			try {
 				Product productClone = product.clone();
 				productClone.setQuantityAvailable(quantity);
@@ -247,9 +251,9 @@ public class Controller {
 	 * Searches for products within a specified interval and returns a String with
 	 * the sorted result.
 	 *
-	 * @param startPrefix  The prefix indicating the start of the interval.
-	 * @param finalPrefix  The prefix indicating the end of the interval.
-	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
+	 * @param startPrefix The prefix indicating the start of the interval.
+	 * @param finalPrefix The prefix indicating the end of the interval.
+	 * @param senseSort   The sense of sort (1 for ascending, 2 for descending).
 	 * @return The String with the sorted list of products within the specified
 	 * interval.
 	 */

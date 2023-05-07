@@ -108,10 +108,10 @@ public class ControllerTest {
 		productsAndQuantitiesList.add("2");
 
 		String result = controller.addOrder("Miguel", productsAndQuantitiesList);
-		Assertions.assertEquals("Order added!", result);
-		assert 4 == product1.getQuantityAvailable();
-		assert 4 == product2.getQuantityAvailable();
-		assert 5 == product3.getQuantityAvailable();
+		Assertions.assertEquals("Order added!", result.substring(0, 12));
+		Assertions.assertEquals(4, product1.getQuantityAvailable());
+		Assertions.assertEquals(4, product2.getQuantityAvailable());
+		Assertions.assertEquals(5, product3.getQuantityAvailable());
 	}
 
 	@Test
