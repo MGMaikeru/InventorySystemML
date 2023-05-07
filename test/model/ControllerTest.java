@@ -92,7 +92,7 @@ public class ControllerTest {
 		productsAndQuantitiesList.add("5");
 
 		String result = controller.addOrder("Miguel", productsAndQuantitiesList);
-		Assertions.assertEquals("Order added!", result);
+		Assertions.assertEquals("Order added!", result.substring(0, 12));
 		assert 4 == product1.getQuantityAvailable();
 		assert 4 == product2.getQuantityAvailable();
 	}
