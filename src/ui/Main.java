@@ -1,8 +1,7 @@
 package ui;
-
-import model.Category;
 import model.Controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,58 +15,65 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-//		System.out.println("<<<<< Passenger Sort System >>>>>");
-//		Main main = new Main();
-//		main.controller.addProduct("Product 2", "Description 2", 10.99, 8, 2, 5);
-//		main.controller.addProduct("Product 3", "Description 3", 24.99, 3, 3, 10);
-//		main.controller.addProduct("Product 1", "Description 1", 7.49, 5, 1, 2);
-//		main.controller.addProduct("Product 4", "Description 4", 15.99, 4, 4, 7);
-//		main.controller.addProduct("Product 5", "Description 5", 12.49, 6, 5, 3);
-//		main.controller.addProduct("Product 6", "Description 6", 9.99, 2, 6, 8);
-//		main.controller.addProduct("Product 7", "Description 7", 18.99, 7, 7, 4);
-//		main.controller.addProduct("Product 8", "Description 8", 5.99, 1, 8, 1);
-//		main.controller.addProduct("Product 9", "Description 9", 11.99, 3, 5, 6);
-//		System.out.println("Empieza la serialización");
-//		main.controller.save();
-//		System.out.println("Se acaba, adiós");
-		// m.displayStartMenu();
+		System.out.println("<<<<< Ultimate Inventory System Manager >>>>>");
+		Main m = new Main();
+		m.displayStartMenu();
 	}
 
 	public void displayStartMenu() {
-		// main.controller.addProduct("Product 10", "Description 10", 8.99, 5, 1, 5);
-
-//		System.out.print("1) \n2)Register new order \n3) \n4) \n5) Exit\nSelected: ");
-//		int option = input.nextInt();
-//		executeOption(option);
+		System.out.print("1)Register product \n2)Register new order \n3)Increase quantity of registered product \n4)Search product " +
+				"\n5)Search order \n8)Exit \nSelected: ");
+		int option = input.nextInt();
+		executeOption(option);
 	}
 
 	public void executeOption(int option) {
 		switch (option) {
 			case 1:
-
-				break;
-			case 2:
 				registerProduct();
 				break;
+			case 2:
+				registerOrder();
+				break;
 			case 3:
-
+				increaseProductQuantity();
 				break;
 			case 4:
-
+				searchProduct();
 				break;
 			case 5:
+				System.out.println(searchOrder());
+				break;
+			case 6:
 				System.out.println("\nThanks for using the program. Until next time!");
 				break;
 			default:
 				System.out.println("Error. Type a valid option.\n");
 				break;
 		}
-		if (option != 5)
+		if (option != 6)
 			displayStartMenu();
 
 	}
 
-	public void registerProduct() {
+	public void registerProduct(){
+		System.out.println("Type product name: ");
+		input.nextLine();
+		String productName = input.nextLine();
+		System.out.println("Type product description: ");
+		String description = input.nextLine();
+		System.out.println("Type product price: ");
+		double price = input.nextDouble();
+		System.out.println("Type available quantity: ");
+		int availableQuantity = input.nextInt();
+		System.out.println("Choose a category:\n 1)Books\n 2)Electronic\n 3)Apparel and accessories\n 4)Foods and beverages" +
+				"\n 5)Stationary\n 6)Sports\n 7)Beauty\n 8)Toys \nSelected: ");
+		int productCategory = input.nextInt();
+
+		System.out.println(controller.addProduct(productName, description, price, availableQuantity, productCategory, 0));
+	}
+
+	public void registerOrder() {
 		System.out.println("Type buyer's name: ");
 		input.nextLine();
 		String buyerName = input.nextLine();
@@ -78,34 +84,128 @@ public class Main {
 			String productName = input.nextLine();
 			System.out.println("Type quantity: ");
 			int productQuantity = input.nextInt();
-			if (!controller.checkProduct(productName, productQuantity))
+			if(!controller.checkProduct(productName, productQuantity))
 				System.out.println("Product doesn't exist or product out of stock!");
+			else
+				products.add(productName);
+				products.add("" + productQuantity);
 			System.out.println("¿Want you add another product? Y/N");
 			input.nextLine();
 			isContinue = input.nextLine();
 		}
-		controller.addOrder(buyerName, products);
+		System.out.println(controller.addOrder(buyerName, products));
 	}
 
-	/*public static void main(String[] args) {
-		Main main = new Main();
-		main.controller.addProduct("Product 2", "Description 2", 10.99, 8, 2, 5);
-		main.controller.addProduct("Product 3", "Description 3", 24.99, 3, 3, 10);
-		main.controller.addProduct("Product 1", "Description 1", 7.49, 5, 1, 2);
-		main.controller.addProduct("Product 4", "Description 4", 15.99, 4, 4, 7);
-		main.controller.addProduct("Product 5", "Description 5", 12.49, 6, 5, 3);
-		main.controller.addProduct("Product 6", "Description 6", 9.99, 2, 6, 8);
-		main.controller.addProduct("Product 7", "Description 7", 18.99, 7, 7, 4);
-		main.controller.addProduct("Product 8", "Description 8", 5.99, 1, 8, 1);
-		main.controller.addProduct("Product 9", "Description 9", 11.99, 3, 5, 6);
-		// main.controller.addProduct("Product 10", "Description 10", 8.99, 5, 1, 5);
+	public void increaseProductQuantity(){
+		System.out.println("Type the product name to witch increase: ");
+		input.nextLine();
+		String productName = input.nextLine();
+		System.out.println("Type the amount to increase: ");
+		int increaseAmount = input.nextInt();
+		System.out.println(controller.increaseQuantity(productName, increaseAmount));
+	}
 
-		System.out.println(main.controller.searchProduct(2, 10));
-		System.out.println();
-		// System.out.println(main.controller.searchInRange(4, 8, 1, 1));
-		System.out.println(main.controller.searchInInterval("Product 1", "Product 5", 1, 1));
-		// System.out.println(main.controller.searchInInterval(1, "Product 1", "Product 8"));
+	public void searchProduct(){
+		System.out.println("Choose a option: \n1)Search a specific product \n2)Search by range \n3)Search by interval \nSelect: ");
+		int option = input.nextInt();
+		switch (option){
+			case 1 -> System.out.println(searchSpecificProduct());
+			case 2 -> System.out.println(searchByRange());
+			case 3 -> System.out.println(searchByInterval());
+		}
+	}
 
-	}*/
+	public String searchSpecificProduct(){
+		System.out.println("\nChoose a option: \n1)Search by product name \n2)Search by times purchased \n3)Search by product price  \n4)Search by product category \nSelect: ");
+		int option = input.nextInt();
+		switch (option) {
+			case 1 -> {
+				System.out.println("Type product name to search: ");
+				input.nextLine();
+				String productName = input.nextLine();
+				return controller.searchProduct(productName);
+			}
+			case 2 -> {
+				System.out.println("Type times purchased to search: ");
+				double timesPurchased = input.nextDouble();
+				return controller.searchProduct(2, timesPurchased);
+			}
+			case 3 -> {
+				System.out.println("Type product price to search: ");
+				double productPrice = input.nextDouble();
+				return controller.searchProduct(1, productPrice);
+			}
+			case 4 -> {
+				System.out.println("Choose a category:\n 1)Books\n 2)Electronic\n 3)Apparel and accessories\n 4)Foods and beverages" +
+						"\n 5)Stationary\n 6)Sports\n 7)Beauty\n 8)Toys \nSelected: ");
+				int option2 = input.nextInt();
+				return controller.searchProduct(option2);
+			}
+			default -> {
+				return "Invalid option!";
+			}
+		}
+	}
 
+	public String searchByRange(){
+		System.out.println("\nChoose a option: \n1)Search by product price \n2)Search by purchased times \n3)Search by available quantity  \nSelect: ");
+		int option = input.nextInt();
+		System.out.println("Type the minimum value: ");
+		double minValue = input.nextDouble();
+		System.out.println("Type the maximum value: ");
+		double maxValue = input.nextDouble();
+		System.out.println("Choose order sort: 1)Descending order 2)Ascending order");
+		int orderOption = input.nextInt();
+		return switch (option){
+			case 1 -> controller.searchInRange(1, minValue, maxValue, orderOption, 2);
+			case 2 -> controller.searchInRange(2, minValue, maxValue, orderOption, 4);
+			case 3 -> controller.searchInRange(3, minValue, maxValue, orderOption, 5);
+			default -> "Invalid option!";
+		};
+	}
+
+	public String searchByInterval(){
+		System.out.println("Type the start prefix: ");
+		input.nextLine();
+		String startPrefix = input.nextLine();
+		System.out.println("Type the final prefix: ");
+		String finalPrefix = input.nextLine();
+		System.out.println("Choose order sort: 1)Descending order 2)Ascending order");
+		int orderOption = input.nextInt();
+		return controller.searchInInterval(startPrefix, finalPrefix, orderOption);
+	}
+
+	public String searchOrder(){
+		System.out.println("\nChoose a option to search: \n1)Search by buyer's name \n2)Search by total price \n3)Search by date \nSelect: ");
+		int option = input.nextInt();
+		switch (option) {
+			case 1 -> {
+				System.out.println("Type order buyer's name to search: ");
+				input.nextLine();
+				String buyerName = input.nextLine();
+				return controller.searchOrder(buyerName);
+			}
+			case 2 -> {
+				System.out.println("Type order total price: ");
+				double totalPrice = input.nextDouble();
+				return controller.searchOrder(totalPrice);
+			}
+			case 3 -> {
+				System.out.println("Type order date (yyyy-MM-dd): ");
+				input.nextLine();
+				String date = input.nextLine();
+				System.out.println("Type order hour (HH:mm): ");
+				String hour = input.nextLine();
+				try {
+					return controller.searchOrder(date, hour);
+				} catch (ParseException e) {
+					e.getMessage();
+				}
+			}
+			default -> {
+				return "Invalid option!";
+			}
+		}
+		return null;
+	}
 }
