@@ -28,7 +28,7 @@ Error-failure density = 0.211<br>
 Reliability = 0.789<br>
 Completeness = 1.9<br>
 
-**Iteration 2:** commit cace3219ee79c530e475e583a87e8bbfa923e1ff <br>
+**Iteration 2:** commit cace3219ee79c530e475e583a87e8bbfa923e1ff<br>
 Error-failure density = 0.3<br>
 Reliability = 0.7<br>
 Completeness = 2.3<br>
@@ -58,7 +58,12 @@ Error-failure density = 0.11<br>
 Reliability = 0.89<br>
 Completeness = 4.2<br>
 
-**Iteration 8:** commit 13b730781311a2a8a34950d08c0224b0747fb4b2 <br>
+**Iteration 8:** commit 13b730781311a2a8a34950d08c0224b0747fb4b2<br>
 Error-failure density = 0.1<br>
 Reliability = 0.9<br>
+Completeness = 4.4<br>
+
+**Iteration 9:** commit 47554025a990e02637cb7a2e46471c16874aa36c<br>
+Error-failure density = 0.05<br>
+Reliability = 0.95<br>
 Completeness = 4.4<br>

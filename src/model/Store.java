@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.text.SimpleDateFormat;
 
 public class Store {
 	private final ArrayList<Product> products;
@@ -59,7 +60,8 @@ public class Store {
 	 */
 	public String addOrder(Order order) {
 		orders.add(order);
-		return "Order added!" + order.getTotalPrice() + order.getDate().toString();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return "Order added!\nTotal price: " + order.getTotalPrice() + "\nPurchase date: " + dateFormat.format(order.getDate().getTime());
 	}
 
 	/**
