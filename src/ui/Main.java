@@ -16,15 +16,29 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("<<<<< Passenger Sort System >>>>>");
-		Main m = new Main();
-		m.displayStartMenu();
+//		System.out.println("<<<<< Passenger Sort System >>>>>");
+//		Main main = new Main();
+//		main.controller.addProduct("Product 2", "Description 2", 10.99, 8, 2, 5);
+//		main.controller.addProduct("Product 3", "Description 3", 24.99, 3, 3, 10);
+//		main.controller.addProduct("Product 1", "Description 1", 7.49, 5, 1, 2);
+//		main.controller.addProduct("Product 4", "Description 4", 15.99, 4, 4, 7);
+//		main.controller.addProduct("Product 5", "Description 5", 12.49, 6, 5, 3);
+//		main.controller.addProduct("Product 6", "Description 6", 9.99, 2, 6, 8);
+//		main.controller.addProduct("Product 7", "Description 7", 18.99, 7, 7, 4);
+//		main.controller.addProduct("Product 8", "Description 8", 5.99, 1, 8, 1);
+//		main.controller.addProduct("Product 9", "Description 9", 11.99, 3, 5, 6);
+//		System.out.println("Empieza la serialización");
+//		main.controller.save();
+//		System.out.println("Se acaba, adiós");
+		// m.displayStartMenu();
 	}
 
 	public void displayStartMenu() {
-		System.out.print("1) \n2)Register new order \n3) \n4) \n5) Exit\nSelected: ");
-		int option = input.nextInt();
-		executeOption(option);
+		// main.controller.addProduct("Product 10", "Description 10", 8.99, 5, 1, 5);
+
+//		System.out.print("1) \n2)Register new order \n3) \n4) \n5) Exit\nSelected: ");
+//		int option = input.nextInt();
+//		executeOption(option);
 	}
 
 	public void executeOption(int option) {
@@ -64,7 +78,7 @@ public class Main {
 			String productName = input.nextLine();
 			System.out.println("Type quantity: ");
 			int productQuantity = input.nextInt();
-			if(!controller.checkProduct(productName, productQuantity))
+			if (!controller.checkProduct(productName, productQuantity))
 				System.out.println("Product doesn't exist or product out of stock!");
 			System.out.println("¿Want you add another product? Y/N");
 			input.nextLine();

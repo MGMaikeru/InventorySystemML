@@ -43,8 +43,7 @@ public class Controller {
 			case 8 -> Category.TOYS;
 			default -> throw new RuntimeException("Error. Invalid category.");
 		};
-		return mercadoLibre
-				.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
+		return mercadoLibre.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class Controller {
 				productClone.setQuantityAvailable(quantity);
 				products.add(productClone);
 			} catch (CloneNotSupportedException e) {
-				e.getMessage();
+				e.printStackTrace();
 			}
 		}
 		return mercadoLibre.addOrder(new Order(buyerName, products, Calendar.getInstance()));
@@ -265,15 +264,6 @@ public class Controller {
 		};
 	}
 
-	private String sortVariableForOrders(int variable) throws IllegalStateException {
-		return switch (variable) {
-			case 1 -> "buyerName";
-			case 2 -> "totalPrice";
-			case 3 -> "date";
-			default -> throw new IllegalStateException("Error. Invalid sort variable.");
-		};
-	}
-
 	/**
 	 * Generates a string representation of the given list of products.
 	 *
@@ -290,5 +280,13 @@ public class Controller {
 
 	public Store getStore() {
 		return mercadoLibre;
+	}
+
+	/**
+	 * Saves the current state of the MercadoLibre system.
+	 * This method delegates the save operation to the mercadoLibre object.
+	 */
+	public void save() {
+		mercadoLibre.save();
 	}
 }

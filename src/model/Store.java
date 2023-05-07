@@ -1,5 +1,8 @@
 package model;
 
+import persistence.Reader;
+import persistence.Writer;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -9,6 +12,8 @@ public class Store {
 	private final ArrayList<Product> products;
 
 	private final ArrayList<Order> orders;
+
+	private final Writer writer;
 
 	private final Searcher<Product, String> searcherProductsByString;
 	private final Searcher<Product, Double> searcherProductsByDouble;
@@ -21,8 +26,11 @@ public class Store {
 
 
 	public Store() {
-		products = new ArrayList<Product>();
+		products = new ArrayList<>();
 		orders = new ArrayList<>();
+		Reader reader = new Reader();
+		writer = new Writer();
+		reader.readGson(products, orders);
 		searcherProductsByString = new Searcher<>();
 		searcherProductsByDouble = new Searcher<>();
 		searcherProductsByInteger = new Searcher<>();
@@ -33,7 +41,10 @@ public class Store {
 	}
 
 	/**
-	 * @param product
+	 * Adds a product to the list of products.
+	 *
+	 * @param product the product to add
+	 * @return a message indicating the product has been added
 	 */
 	public String addProduct(Product product) {
 		products.add(product);
@@ -41,7 +52,10 @@ public class Store {
 	}
 
 	/**
-	 * @param order
+	 * Adds an order to the list of orders.
+	 *
+	 * @param order the order to add
+	 * @return a message indicating the order has been added
 	 */
 	public String addOrder(Order order) {
 		orders.add(order);
@@ -49,8 +63,11 @@ public class Store {
 	}
 
 	/**
-	 * @param productName
-	 * @param newQuantity
+	 * Increases the quantity of a product by a given value.
+	 *
+	 * @param productName the name of the product
+	 * @param newQuantity the quantity to increase by
+	 * @return a message indicating the result of the operation
 	 */
 	public String increaseQuantity(String productName, int newQuantity) {
 		Product product = searchProduct("name", productName);
@@ -64,9 +81,11 @@ public class Store {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
-	 * @return
+	 * Searches for a product based on a search variable and value.
+	 *
+	 * @param searchVariable the search variable
+	 * @param value          the value to search for
+	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, String value) {
 		sortProductsByName(products);
@@ -74,9 +93,11 @@ public class Store {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
-	 * @return
+	 * Searches for a product based on a search variable and double value.
+	 *
+	 * @param searchVariable the search variable
+	 * @param value          the double value to search for
+	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, double value) {
 		Product product = null;
@@ -94,9 +115,11 @@ public class Store {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param value
-	 * @return
+	 * Searches for a product based on a search variable and double value.
+	 *
+	 * @param searchVariable the search variable
+	 * @param value          the double value to search for
+	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, Category value) {
 		sortProductsByCategory(products);
@@ -104,9 +127,11 @@ public class Store {
 	}
 
 	/**
-	 * @param searchVariable
-	 * @param buyerName
-	 * @return
+	 * Searches for an order based on a search variable and buyer name.
+	 *
+	 * @param searchVariable the search variable
+	 * @param buyerName      the buyer name to search for
+	 * @return the found order
 	 */
 	public Order searchOrder(String searchVariable, String buyerName) {
 		sortOrderBy(searchVariable);
@@ -114,10 +139,11 @@ public class Store {
 	}
 
 	/**
+	 * Searches for an order based on a search variable and Calendar date.
 	 *
-	 * @param searchVariable
-	 * @param date
-	 * @return
+	 * @param searchVariable the search variable
+	 * @param date           the Calendar date to search for
+	 * @return the found order
 	 */
 	public Order searchOrder(String searchVariable, Calendar date) {
 		sortOrderBy(searchVariable);
@@ -240,6 +266,14 @@ public class Store {
 			throw new RuntimeException("Error. Invalid sense of ordering");
 		}
 		return matches;
+	}
+
+	/**
+	 * Saves the current state of products and orders.
+	 * This method invokes the save method of the writer object.
+	 */
+	public void save() {
+		writer.save(products, orders);
 	}
 
 }
