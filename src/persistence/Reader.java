@@ -10,10 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reader {
+	private final String PROJECT_PATH = System.getProperty("user.dir") + "\\data";
+
 	public void readGson(ArrayList<Product> products, ArrayList<Order> orders) {
+		String RELATIVE_PATH = "\\systemData";
+		readGson(RELATIVE_PATH, products, orders);
+	}
+
+	public void readGson(String dataRelativePath, ArrayList<Product> products, ArrayList<Order> orders) {
 		Gson gson = new Gson();
-		File projectDir = new File(System.getProperty("user.dir"));
-		File dataDirectory = new File(projectDir + "\\data\\systemData");
+		File dataDirectory = new File(PROJECT_PATH + dataRelativePath);
 		File productsInformation = new File(dataDirectory + "\\products.json");
 		File ordersInformation = new File(dataDirectory + "\\orders.json");
 		try {

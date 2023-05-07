@@ -35,33 +35,16 @@ public class WriterTest {
 		productsList.add(product3);
 	}
 
-	public void setupStage2() {
-		productsList = new ArrayList<>();
-		ordersList = new ArrayList<>();
-		gson = new Gson();
-		productsList.add(product1);
-		productsList.add(product2);
-		productsList.add(product3);
-		Order order1 = new Order("Miguel", productsList, Calendar.getInstance());
-		ordersList.add(order1);
-		try {
-			writer.saveProducts(relativePath + "\\productsTest2.json", productsList);
-			writer.saveOrders(relativePath + "\\ordersTest2.json", ordersList);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Test
 	public void saveTest1() {
 		setupStage1();
 		File productFile = null, ordersFile = null;
 		Product[] productsStored = null;
 		try {
-			writer.saveProducts(relativePath + "\\productsTest1.json", productsList);
-			writer.saveOrders(relativePath + "\\ordersTest1.json", ordersList);
-			productFile = new File(System.getProperty("user.dir") + "\\data\\testData\\productsTest1.json");
-			ordersFile = new File(System.getProperty("user.dir") + "\\data\\testData\\ordersTest1.json");
+			writer.saveProducts(relativePath + "\\products.json", productsList);
+			writer.saveOrders(relativePath + "\\orders.json", ordersList);
+			productFile = new File(System.getProperty("user.dir") + "\\data\\testData\\products.json");
+			ordersFile = new File(System.getProperty("user.dir") + "\\data\\testData\\orders.json");
 			String productsJson = new String(java.nio.file.Files.readAllBytes(productFile.toPath()));
 			productsStored = gson.fromJson(productsJson, Product[].class);
 		} catch (Exception e) {
@@ -78,10 +61,12 @@ public class WriterTest {
 
 	@Test
 	public void saveTest2() {
-		setupStage2();
 		try {
-			writer.saveProducts(relativePath + "\\productsTest2.json", productsList);
-			writer.saveOrders(relativePath + "\\ordersTest2.json", ordersList);
+			setupStage1();
+			Order order1 = new Order("Miguel", productsList, Calendar.getInstance());
+			ordersList.add(order1);
+			writer.saveProducts(relativePath + "\\products.json", productsList);
+			writer.saveOrders(relativePath + "\\orders.json", ordersList);
 		} catch (IOException e) {
 			fail("It was expected that the read save method would not throw any exception.");
 			e.printStackTrace();
