@@ -53,7 +53,7 @@ public class Searcher<T, K extends Comparable<K>> {
 		if (indexMin != -1 && indexMax != -1) {
 			for (int i = indexMin; i < list.size() && i < indexMax; i++)
 				listCropped.add(list.get(i));
-			if (compareValues(list.get(indexMin), searchVariable, min) == 0 && indexMax < list.size() && compareValues(list.get(indexMax), searchVariable, max) == 0)
+			if (indexMax < list.size() && compareValues(list.get(indexMax), searchVariable, max) == 0)
 				listCropped.add(list.get(indexMax));
 		}
 		return listCropped;

@@ -55,7 +55,7 @@ public class Main {
 		System.out.print("Type the product name: ");
 		input.nextLine();
 		String productName = input.nextLine();
-		System.out.println("Type the product description: ");
+		System.out.print("Type the product description: ");
 		String description = input.nextLine();
 		System.out.print("Type the product price (if the price is not integer use ',' for the decimals): ");
 		double price = isDouble(input);
@@ -63,7 +63,7 @@ public class Main {
 		int availableQuantity = isInteger(input);
 		printCategoryOptions();
 		int productCategory = isInteger(input);
-		System.out.println("Number of times purchased: ");
+		System.out.print("Number of times purchased: ");
 		int timesPurchased = isInteger(input);
 		System.out.println(controller.addProduct(productName, description, price, availableQuantity, productCategory, timesPurchased));
 	}

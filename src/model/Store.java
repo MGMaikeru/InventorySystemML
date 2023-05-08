@@ -85,7 +85,7 @@ public class Store {
 	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, String value) {
-		sortProductsByName(products);
+		sortProductsBy(searchVariable, products);
 		return searcherProductsByString.search(products, searchVariable, value);
 	}
 
@@ -97,18 +97,12 @@ public class Store {
 	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, double value) {
-		Product product = null;
-		switch (searchVariable) {
-			case "price" -> {
-				sortProductsByPrice(products);
-				product = searcherProductsByDouble.search(products, searchVariable, value);
-			}
-			case "timesPurchased" -> {
-				sortProductsByTimesPurchased(products);
-				product = searcherProductsByInteger.search(products, searchVariable, (int) value);
-			}
-		}
-		return product;
+		sortProductsBy(searchVariable, products);
+		return switch (searchVariable) {
+			case "price" -> searcherProductsByDouble.search(products, searchVariable, value);
+			case "timesPurchased" -> searcherProductsByInteger.search(products, searchVariable, (int) value);
+			default -> throw new IllegalStateException("Error. Invalid search variable.");
+		};
 	}
 
 	/**
@@ -119,7 +113,7 @@ public class Store {
 	 * @return the found product
 	 */
 	public Product searchProduct(String searchVariable, Category value) {
-		sortProductsByCategory(products);
+		sortProductsBy(searchVariable, products);
 		return searcherProductsByCategory.search(products, searchVariable, value);
 	}
 
@@ -153,7 +147,7 @@ public class Store {
 					case "buyerName" -> Comparator.comparing(Order::getBuyerName);
 					case "totalPrice" -> Comparator.comparing(Order::getTotalPrice);
 					case "date" -> Comparator.comparing(Order::getDate);
-					default -> throw new IllegalStateException("");
+					default -> throw new IllegalStateException("Error. Invalid search variable.");
 				}
 		);
 	}
@@ -169,10 +163,10 @@ public class Store {
 	 * @return The list of product matches within the specified range.
 	 */
 	public ArrayList<Product> searchInRange(String searchVariable, double min, double max, int senseSort, String sortVariable) {
-		sortProductsByTimesPurchased(products);
+		sortProductsBy(searchVariable, products);
 		ArrayList<Product> matches = switch (searchVariable) {
 			case "price" -> searcherProductsByDouble.filterList(products, searchVariable, min, max);
-			case "timesPurchased" ->
+			case "timesPurchased", "quantityAvailable" ->
 					searcherProductsByInteger.filterList(products, searchVariable, (int) min, (int) max);
 			default -> throw new IllegalStateException("Invalid search variable: " + searchVariable);
 		};
@@ -190,9 +184,19 @@ public class Store {
 	 * @return The sorted list of products within the specified interval.
 	 */
 	public ArrayList<Product> searchInInterval(String variable, String startPrefix, String finalPrefix, int senseSort, String sortVariable) {
-		sortProductsByName(products);
+		sortProductsBy(sortVariable, products);
 		ArrayList<Product> matches = searcherProductsByString.filterList(products, variable, startPrefix, finalPrefix);
 		return sortSearchResults(matches, senseSort, sortVariable);
+	}
+
+	private void sortProductsBy(String searchVariable, ArrayList<Product> listOfProducts) {
+		switch (searchVariable) {
+			case "name" -> sortProductsByName(listOfProducts);
+			case "price" -> sortProductsByPrice(listOfProducts);
+			case "timesPurchased" -> sortProductsByTimesPurchased(listOfProducts);
+			case "category" -> sortProductsByCategory(listOfProducts);
+			default -> throw new IllegalStateException("Invalid search variable: " + searchVariable);
+		}
 	}
 
 	/**
@@ -241,10 +245,7 @@ public class Store {
 	 * @throws RuntimeException If an invalid sense of ordering is provided.
 	 */
 	public ArrayList<Product> sortSearchResults(ArrayList<Product> matches, int senseSort, String sortVariable) throws RuntimeException {
-		switch (sortVariable) {
-			case "name" -> sortProductsByName(matches);
-			case "price" -> sortProductsByPrice(matches);
-		}
+		sortProductsBy(sortVariable, matches);
 		if (senseSort == 2) {
 			Collections.reverse(matches);
 		} else if (senseSort != 1) {
