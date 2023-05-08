@@ -91,8 +91,8 @@ public class ControllerTest {
 		productsAndQuantitiesList.add("Cboc Two");
 		productsAndQuantitiesList.add("5");
 
-		String result = controller.addOrder("Miguel", productsAndQuantitiesList);
-		Assertions.assertEquals("Order added!", result);
+		String result = controller.addOrder("Miguel", productsAndQuantitiesList, -1);
+		Assertions.assertEquals("Order added!", result.substring(0, 12));
 		assert 4 == product1.getQuantityAvailable();
 		assert 4 == product2.getQuantityAvailable();
 	}
@@ -107,11 +107,11 @@ public class ControllerTest {
 		productsAndQuantitiesList.add("HD laptop");
 		productsAndQuantitiesList.add("2");
 
-		String result = controller.addOrder("Miguel", productsAndQuantitiesList);
-		Assertions.assertEquals("Order added!", result);
-		assert 4 == product1.getQuantityAvailable();
-		assert 4 == product2.getQuantityAvailable();
-		assert 5 == product3.getQuantityAvailable();
+		String result = controller.addOrder("Miguel", productsAndQuantitiesList, -1);
+		Assertions.assertEquals("Order added!", result.substring(0, 12));
+		Assertions.assertEquals(4, product1.getQuantityAvailable());
+		Assertions.assertEquals(4, product2.getQuantityAvailable());
+		Assertions.assertEquals(5, product3.getQuantityAvailable());
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class ControllerTest {
 			productsAndQuantitiesList.add("HD laptop");
 			productsAndQuantitiesList.add("2");
 
-			controller.addOrder("", productsAndQuantitiesList);
+			controller.addOrder("", productsAndQuantitiesList, -1);
 			Assertions.fail("An exception is expected as the buyer name is empty.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. The name of buyer is empty.", e.getMessage());
@@ -142,7 +142,7 @@ public class ControllerTest {
 			productsAndQuantitiesList.add("5");
 			productsAndQuantitiesList.add("HD laptop");
 			productsAndQuantitiesList.add("2");
-			controller.addOrder("Miguel", productsAndQuantitiesList);
+			controller.addOrder("Miguel", productsAndQuantitiesList, -1);
 			Assertions.fail("An exception is expected as the product -Miguel in wonderland- exceeds the stock of the product.");
 		} catch (RuntimeException e) {
 			Assertions.assertEquals("Error. One of the products exceeds the quantity available.", e.getMessage());
@@ -153,7 +153,7 @@ public class ControllerTest {
 	public void addOrderTest5() {
 		setupStage2();
 		try {
-			controller.addOrder("Miguel", productsAndQuantitiesList);
+			controller.addOrder("Miguel", productsAndQuantitiesList, -1);
 			Assertions.fail("An exception is expected as the product list is empty.");
 		} catch (RuntimeException e) {
 			String expected = "Error. It is not possible to create an order with an empty product list.";

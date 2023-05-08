@@ -1,10 +1,7 @@
 package model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Controller {
 
@@ -28,10 +25,15 @@ public class Controller {
 	 */
 	public String addProduct(String productName, String description, double price, int quantity, int cate,
 							 int timesPurchased) throws RuntimeException {
+		if (mercadoLibre.searchProduct("name", productName) != null) {
+			return "The product was already in stock!\n" + increaseQuantity(productName, quantity);
+		}
 		if (productName.isEmpty())
 			throw new RuntimeException("Error. The name of the product is empty.");
 		if (quantity < 0)
 			throw new RuntimeException("Error. The quantity of product in inventory cannot be negative.");
+		if (timesPurchased < 0)
+			throw new RuntimeException("Error. The times purchased cannot be negative.");
 		Category category = switch (cate) {
 			case 1 -> Category.BOOKS;
 			case 2 -> Category.ELECTRONIC;
@@ -43,8 +45,7 @@ public class Controller {
 			case 8 -> Category.TOYS;
 			default -> throw new RuntimeException("Error. Invalid category.");
 		};
-		return mercadoLibre
-				.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
+		return mercadoLibre.addProduct(new Product(productName, description, price, quantity, category, timesPurchased));
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class Controller {
 	 * @return A message indicating the success or failure of the operation.
 	 * @throws RuntimeException If the buyer name, order ID, or product list is empty.
 	 */
-	public String addOrder(String buyerName, ArrayList<String> productsList) {
+	public String addOrder(String buyerName, ArrayList<String> productsList, double totalPrice) throws RuntimeException {
 		if (buyerName.isEmpty())
 			throw new RuntimeException("Error. The name of buyer is empty.");
 		if (productsList.isEmpty())
@@ -67,17 +68,34 @@ public class Controller {
 			Product product = mercadoLibre.searchProduct("name", productsList.get(i));
 			int quantity = Integer.parseInt(productsList.get(i + 1));
 			product.setTimesPurchased(product.getTimesPurchased() + quantity);
+			int newQuantity = product.getQuantityAvailable() - quantity;
+			if (newQuantity < 0)
+				throw new RuntimeException("Error. One of the products exceeds the quantity available.");
+			product.setQuantityAvailable(newQuantity);
 			try {
 				Product productClone = product.clone();
 				productClone.setQuantityAvailable(quantity);
 				products.add(productClone);
 			} catch (CloneNotSupportedException e) {
-				e.getMessage();
+				e.printStackTrace();
 			}
 		}
-		return mercadoLibre.addOrder(new Order(buyerName, products, Calendar.getInstance()));
+		Order order;
+		if (totalPrice != -1) {
+			if (totalPrice < 0)
+				throw new RuntimeException("Error. The total price of the order cannot be negative.");
+			order = new Order(buyerName, products, Calendar.getInstance(), totalPrice);
+		} else order = new Order(buyerName, products, Calendar.getInstance());
+		return mercadoLibre.addOrder(order);
 	}
 
+	/**
+	 * Checks if a product with the given name and quantity is available in the MercadoLibre system.
+	 *
+	 * @param productName The name of the product to check.
+	 * @param quantity    The desired quantity of the product.
+	 * @return true if the product is available in the desired quantity, false otherwise.
+	 */
 	public boolean checkProduct(String productName, int quantity) {
 		Product product = mercadoLibre.searchProduct("name", productName);
 		return product != null && product.getQuantityAvailable() - quantity >= 0;
@@ -122,19 +140,19 @@ public class Controller {
 		Product product = switch (searchVariable) {
 			case 1 -> mercadoLibre.searchProduct("price", value);
 			case 2 -> mercadoLibre.searchProduct("timesPurchased", value);
+			case 3 -> switch ((int) value) {
+				case 1 -> mercadoLibre.searchProduct("category", Category.BOOKS);
+				case 2 -> mercadoLibre.searchProduct("category", Category.ELECTRONIC);
+				case 3 -> mercadoLibre.searchProduct("category", Category.APPAREL_AND_ACCESSORIES);
+				case 4 -> mercadoLibre.searchProduct("category", Category.FOODS_AND_BEVERAGES);
+				case 5 -> mercadoLibre.searchProduct("category", Category.STATIONARY);
+				case 6 -> mercadoLibre.searchProduct("category", Category.SPORTS);
+				case 7 -> mercadoLibre.searchProduct("category", Category.BEAUTY);
+				case 8 -> mercadoLibre.searchProduct("category", Category.TOYS);
+				default -> throw new RuntimeException("Error. Invalid category.");
+			};
 			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
 		};
-		return printProduct(product);
-	}
-
-	/**
-	 * Searches for a product with the given category value and returns its details.
-	 *
-	 * @param value The category value to search for.
-	 * @return A string representation of the product's details.
-	 */
-	public String searchProduct(Category value) {
-		Product product = mercadoLibre.searchProduct("category", value);
 		return printProduct(product);
 	}
 
@@ -160,34 +178,18 @@ public class Controller {
 	}
 
 	/**
-	 * Searches for an order based on a date and time.
+	 * Searches for an order based on a search variable and value.
 	 *
-	 * @param dateString the date string in the format "yyyy-MM-dd"
-	 * @param timeString the time string in the format "HH:mm"
-	 * @return a string representing the found order
-	 * @throws ParseException if the date or time string cannot be parsed
+	 * @param searchVariable the search variable
+	 * @param value          the value to search for
+	 * @return a string representation of the found order
 	 */
-	public String searchOrder(String dateString, String timeString) throws ParseException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = dateFormat.parse(dateString);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		Date time = timeFormat.parse(timeString);
-		calendar.set(Calendar.HOUR_OF_DAY, time.getHours());
-		calendar.set(Calendar.MINUTE, time.getMinutes());
-		Order order = mercadoLibre.searchOrder("date", calendar);
-		return printOrder(order);
-	}
-
-	/**
-	 * Searches for an order based on the buyer name.
-	 *
-	 * @param buyerName the buyer name
-	 * @return a string representing the found order, or "Order not found." if no order was found.
-	 */
-	public String searchOrder(String buyerName) {
-		Order order = mercadoLibre.searchOrder("name", buyerName);
+	public String searchOrder(int searchVariable, String value) {
+		Order order = switch (searchVariable) {
+			case 1 -> mercadoLibre.searchOrder("buyerName", value);
+			case 2 -> mercadoLibre.searchOrder("date", value);
+			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
+		};
 		return printOrder(order);
 	}
 
@@ -225,6 +227,8 @@ public class Controller {
 					mercadoLibre.searchInRange("price", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			case 2 ->
 					mercadoLibre.searchInRange("timesPurchased", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
+			case 3 ->
+					mercadoLibre.searchInRange("quantityAvailable", minimum, maximum, senseSort, sortVariableForProducts(sortVariable));
 			default -> throw new IllegalStateException("Unexpected value: " + searchVariable);
 		};
 		return printProductList(matches);
@@ -234,17 +238,15 @@ public class Controller {
 	 * Searches for products within a specified interval and returns a String with
 	 * the sorted result.
 	 *
-	 * @param startPrefix  The prefix indicating the start of the interval.
-	 * @param finalPrefix  The prefix indicating the end of the interval.
-	 * @param senseSort    The sense of sort (1 for ascending, 2 for descending).
-	 * @param sortVariable The variable to be used for sorting (e.g., "name",
-	 *                     "price").
+	 * @param startPrefix The prefix indicating the start of the interval.
+	 * @param finalPrefix The prefix indicating the end of the interval.
+	 * @param senseSort   The sense of sort (1 for ascending, 2 for descending).
 	 * @return The String with the sorted list of products within the specified
 	 * interval.
 	 */
-	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort, int sortVariable) {
+	public String searchInInterval(String startPrefix, String finalPrefix, int senseSort) {
 		ArrayList<Product> matches = mercadoLibre.searchInInterval("name", startPrefix, finalPrefix, senseSort,
-				sortVariableForProducts(sortVariable));
+				sortVariableForProducts(1));
 		return printProductList(matches);
 	}
 
@@ -261,15 +263,7 @@ public class Controller {
 			case 2 -> "price";
 			case 3 -> "category";
 			case 4 -> "timesPurchased";
-			default -> throw new IllegalStateException("Error. Invalid sort variable.");
-		};
-	}
-
-	private String sortVariableForOrders(int variable) throws IllegalStateException {
-		return switch (variable) {
-			case 1 -> "buyerName";
-			case 2 -> "totalPrice";
-			case 3 -> "date";
+			case 5 -> "quantityAvailable";
 			default -> throw new IllegalStateException("Error. Invalid sort variable.");
 		};
 	}
@@ -290,5 +284,13 @@ public class Controller {
 
 	public Store getStore() {
 		return mercadoLibre;
+	}
+
+	/**
+	 * Saves the current state of the MercadoLibre system.
+	 * This method delegates the save operation to the mercadoLibre object.
+	 */
+	public void save() {
+		mercadoLibre.save();
 	}
 }

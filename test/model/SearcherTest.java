@@ -3,6 +3,7 @@ package model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class SearcherTest {
 	private ArrayList<Order> orderList;
 	private Searcher<Order, String> orderSearcherByString;
 	private Searcher<Order, Double> orderSearcherByNumber;
-	private Searcher<Order, Calendar> orderSearcherByDate;
+	//	private Searcher<Order, Calendar> orderSearcherByDate;
 	private final Calendar date = Calendar.getInstance();
 
 	public void setupStage1() {
@@ -83,7 +84,7 @@ public class SearcherTest {
 		orderList.add(order3);
 		orderSearcherByString = new Searcher<>();
 		orderSearcherByNumber = new Searcher<>();
-		orderSearcherByDate = new Searcher<>();
+//		orderSearcherByDate = new Searcher<>();
 	}
 
 	@Test
@@ -142,7 +143,9 @@ public class SearcherTest {
 	@Test
 	public void searchOrderByDate3() {
 		setupStage3();
-		Assertions.assertEquals(order2, orderSearcherByDate.search(orderList, "date", date));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String searchedDate = dateFormat.format(date.getTime());
+		Assertions.assertEquals(order2, orderSearcherByString.search(orderList, "date", searchedDate));
 	}
 
 	@Test

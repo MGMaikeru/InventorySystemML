@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Searcher<T, K extends Comparable<K>> {
 	public T search(ArrayList<T> list, String searchVariable, K attributeValue) {
 		int index = binarySearch(list, searchVariable, attributeValue, 0, list.size() - 1);
-		T element = index == -1 ? null : list.get(index);
+		T element = index < list.size() && index != -1 ? list.get(index) : null;
 		return element != null && compareValues(element, searchVariable, attributeValue) == 0 ? element : null;
 	}
 
@@ -51,9 +51,9 @@ public class Searcher<T, K extends Comparable<K>> {
 		int indexMax = binarySearch(list, searchVariable, max, 0, list.size() - 1);
 		ArrayList<T> listCropped = new ArrayList<>();
 		if (indexMin != -1 && indexMax != -1) {
-			for (int i = indexMin; i < indexMax; i++)
+			for (int i = indexMin; i < list.size() && i < indexMax; i++)
 				listCropped.add(list.get(i));
-			if (compareValues(list.get(indexMin), searchVariable, min) == 0 && compareValues(list.get(indexMax), searchVariable, max) == 0)
+			if (compareValues(list.get(indexMin), searchVariable, min) == 0 && indexMax < list.size() && compareValues(list.get(indexMax), searchVariable, max) == 0)
 				listCropped.add(list.get(indexMax));
 		}
 		return listCropped;

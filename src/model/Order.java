@@ -1,21 +1,30 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Order {
 
-	private final String buyerName;
+	private final String buyerName, date;
 	private double totalPrice;
-	private final Calendar date;
-	private ArrayList<Product> productList;
+	private final ArrayList<Product> productList;
 
-	public Order(String buyerName, ArrayList<Product> productList, Calendar date) {
-		this.productList = new ArrayList<>();
+	public Order(String buyerName, ArrayList<Product> productList, Calendar date, double totalPrice) {
 		this.buyerName = buyerName;
 		this.productList = new ArrayList<>();
 		this.productList.addAll(productList);
-		this.date = date;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.date = dateFormat.format(date.getTime());
+		this.totalPrice = totalPrice;
+	}
+
+	public Order(String buyerName, ArrayList<Product> productList, Calendar date) {
+		this.buyerName = buyerName;
+		this.productList = new ArrayList<>();
+		this.productList.addAll(productList);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.date = dateFormat.format(date.getTime());
 		calculateTotalPrice();
 	}
 
@@ -28,11 +37,21 @@ public class Order {
 		return buyerName;
 	}
 
-	public Calendar getDate() {
+	public String getDate() {
 		return date;
 	}
 
 	public double getTotalPrice() {
 		return totalPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "Order{" +
+				"buyerName='" + buyerName + '\'' +
+				", date='" + date + '\'' +
+				", totalPrice=" + totalPrice +
+				", productList=" + productList +
+				'}';
 	}
 }
